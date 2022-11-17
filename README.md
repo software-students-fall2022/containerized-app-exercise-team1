@@ -26,6 +26,10 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 
 # Run machine-learning-client project locally
 
+* Make sure that virtual environment is activated
+    ```
+    source .venv/Scripts/activate
+    ```
 * cd to the correct folder (assuming you are currently at this directory)
     ```
     cd machine-learning-client
