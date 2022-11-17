@@ -7,4 +7,30 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 
 * Jonason Wu (jw5911): [Github Profile](https://github.com/JonasonWu)
 
+# Set up the virtual environment
 
+* Create python virtual environment
+    ```
+    python -m venv .venv
+    ```
+* Activate virtual environment on bash
+    ```
+    source .venv/Scripts/activate
+    ```
+* Install dependencies
+    ```
+    pip install opencv-python
+    pip install mediapipe
+    pip install tensorflow
+    ```
+
+# Run machine-learning-client project locally
+
+* cd to the correct folder (assuming you are currently at this directory)
+    ```
+    cd machine-learning-client
+    ```
+* Run the project
+    ```
+    python -m TechVidvan-hand_gesture_detection.py
+    ```
