@@ -15,7 +15,6 @@ from tensorflow.keras.models import load_model
 mpHands = mp.solutions.hands
 hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mpDraw = mp.solutions.drawing_utils
-props = ['rock', 'paper', 'scissor']
 
 # Load the gesture recognizer model
 model = load_model('mp_hand_gesture')
@@ -69,6 +68,8 @@ def display_content(frame, text, location, color):
     show_frame(frame)
 
 def computer_plays(frame):
+    # this should be a static variable
+    props = ['rock', 'paper', 'scissor']
     cp_play = props[math.floor(random.random()*3)]
     display_text = "Computer Plays " + cp_play
     display_content(frame, display_text, (10, 150), (255, 0, 0))
@@ -83,10 +84,17 @@ def handle_play(user_play, cp_play):
     Returns 'user' for user victory. Returns 'cp' for computer victory. Returns 'tie' for a tie.
     Anything else means that a tie or invalid input was detected.
     '''
-
     # TODO: Compute the results, process the mongo db stuff here, return
 
-    return 'user'
+    user_wins = {'rock': 'scissor', 'paper': 'rock', 'scissor': 'paper'}
+    if user_play == cp_play:
+        return 'tie'
+    elif user_play == '':
+        return None
+    elif user_wins.get(user_play, 'rock') == cp_play:
+        return 'user'
+    else:
+        return 'cp'
 
 def show_frame(frame):
     cv2.imshow("Output", frame)
@@ -105,8 +113,23 @@ def establish_web_cam_connection():
             break
     return cap
 
+def end_program(cap):
+    # release the webcam and destroy all active windows
+    cap.release()
+    cv2.destroyAllWindows()
+    print("Completed Exit steps")
+
 def main(seconds_per_round, num_of_rounds):
     print("Game is starting...")
+    BLACK = (0, 0, 0)
+    RED = (0, 0, 255)
+    BLUE = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    ORANGE = (0, 165, 255)
+    # number of computer victories
+    cp_victory = 0 
+    # number of user victories
+    user_victory = 0
     try:
         # start off with a new round
         new_round = True
@@ -131,10 +154,10 @@ def main(seconds_per_round, num_of_rounds):
             gesture, frame = predict_gesture(frame)
 
             # display the gesture of the user.
-            display_content(frame, gesture, (10, 50), (255, 255, 255))
+            display_content(frame, gesture, (10, 50), BLACK)
 
             # display the time left for the user to play
-            display_content(frame, display_text, (100, 100), (0, 0, 255))
+            display_content(frame, display_text, (100, 100), RED)
 
             # if the time is up
             if display_text <= 0:
@@ -145,24 +168,26 @@ def main(seconds_per_round, num_of_rounds):
                 curTime = time.time()
 
                 # process results, save details into the db, etc.
-                status = handle_play(gesture, cp_play)
+                result = handle_play(gesture, cp_play)
                 
                 # sleep for the leftover time
                 time.sleep(4 + curTime - time.time())
 
                 # render the results based on the status
-                if status == 'user':
-                    display_content(frame, "You Win!!!", (10, 200), (0, 255, 0))
+                if result == 'user':
+                    display_content(frame, "You Win!!!", (10, 200), GREEN)
                      # decrement the number of rounds left
                     num_of_rounds -= 1
-                elif status == 'cp':
-                    display_content(frame, "You Lose", (10, 200), (255, 0, 0))
+                    user_victory += 1
+                elif result == 'cp':
+                    display_content(frame, "You Lose", (10, 200), RED)
                     # decrement the number of rounds left
                     num_of_rounds -= 1
-                elif status == 'tie':
-                    display_content(frame, "Tie", (10, 200), (0, 0, 255))
+                    cp_victory += 1
+                elif result == 'tie':
+                    display_content(frame, "Tie", (10, 200), ORANGE)
                 else:
-                    display_content(frame, "Try again", (10, 200), (0, 0, 255))
+                    display_content(frame, "Try again", (10, 200), ORANGE)
                 # we are ready for a new round
                 new_round = True
 
@@ -172,10 +197,24 @@ def main(seconds_per_round, num_of_rounds):
         print(e)
     except Exception as e:
         print(e)
-        # release the webcam and destroy all active windows
-        cap.release()
-        cv2.destroyAllWindows()
-        print("Completed Exit steps")
+        end_program(cap)
+    else:
+        # at successful completion, display frame with all results
+        if user_victory > cp_victory:
+            display_text = "You have Won!!!"
+            color = GREEN
+        elif user_victory == cp_victory:
+            display_text = "It is a tie"
+            color = ORANGE
+        else:
+            display_text = "The computer has won"
+            color = RED
+        display_text += " ("+ user_victory + ':' + cp_victory + ')'
+        display_content(frame, display_text, (10, 250), color)
+        display_text = "Press any key to quit"
+        display_content(frame, display_text, (10, 300), BLACK)
+        cv2.waitKey(0)
+        end_program(cap)
 
 class WebCamConnection(Exception):
     pass

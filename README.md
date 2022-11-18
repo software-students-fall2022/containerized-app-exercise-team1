@@ -36,5 +36,5 @@ Build a containerized app that uses machine learning. See [instructions](./instr
     ```
 * Run the project
     ```
-    python -m TechVidvan-hand_gesture_detection.py
+    python -m hand_gesture_rock_paper_scissor
     ```
