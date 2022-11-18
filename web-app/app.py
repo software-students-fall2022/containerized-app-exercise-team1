@@ -17,11 +17,47 @@ import os
 #     print('Database connection error:', e) # debug
 
 
+# Dummy data!
+game = [
+    {
+        "roundNum": 1,
+        "playerMove": "Scissor",
+        "computerMove": "Rock",
+        "result": "Lose",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": 2,
+        "playerMove": "Paper",
+        "computerMove": "Rock",
+        "result": "Win",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": 3,
+        "playerMove": "Scissor",
+        "computerMove": "Scissor",
+        "result": "Tie",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": "Invalid",
+        "playerMove": "Invalid",
+        "computerMove": "Invalid",
+        "result": "Invalid",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+]
+
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template("home.html")
+    return render_template("home.html", game=game)
 
 
 if __name__ == "__main__":
