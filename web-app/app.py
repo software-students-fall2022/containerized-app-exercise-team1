@@ -14,7 +14,6 @@ try:
 except Exception as e:
     # the ping command failed, so the connection is not available.
     # render_template('error.html', error=e) # render the edit template
-    print(' *', "Failed to connect to MongoDB at", 'mongodb+srv://RobertChen:adOuu8E6S9G7Cwbo@cluster0.2swudzk.mongodb.net/?retryWrites=true&w=majority')
     print('Database connection error:', e) # debug
 
 
