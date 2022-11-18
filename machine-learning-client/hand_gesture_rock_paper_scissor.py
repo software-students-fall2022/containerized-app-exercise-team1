@@ -110,8 +110,8 @@ def establish_web_cam_connection():
             time.sleep(2)
             cap = cv2.VideoCapture(0)
         else:
-            break
-    return cap
+            return cap
+    raise WebCamConnection("Cannot connect to camera.")
 
 def end_program(cap):
     # release the webcam and destroy all active windows
