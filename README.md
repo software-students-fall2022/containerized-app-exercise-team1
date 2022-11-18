@@ -1,4 +1,12 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=9334070&assignment_repo_type=AssignmentRepo)
 # Containerized App Exercise
 
 Build a containerized app that uses machine learning. See [instructions](./instructions.md) for details.
+
+## Setting up the docker container for the web app and database
+
+Download Docker Desktop.[link](https://www.docker.com/)
+
+Inside the directory of the project
+```
+docker-compose up
+```
