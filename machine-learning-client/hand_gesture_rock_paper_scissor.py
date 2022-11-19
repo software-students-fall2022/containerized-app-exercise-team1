@@ -56,6 +56,15 @@ class StaticVariables:
     Indices from 1 to 6 all work out for the placement of text on the frames.
     '''
 
+    font_size_scale = 1
+    '''
+    This is the font size scale for the text.
+    '''
+    font_thickness = 2
+    '''
+    This is the thickness of the text.
+    '''
+
 
 
 def predict_gesture(frame):
@@ -113,7 +122,7 @@ def display_content(frame, text: str, location: tuple, color: tuple):
 
     # put the text at the location with the specified color formatted as bgr.
     cv2.putText(frame, str(text), location, cv2.FONT_HERSHEY_SIMPLEX, 
-            1, color, 2, cv2.LINE_AA)
+            StaticVariables.font_size_scale, color, StaticVariables.font_thickness, cv2.LINE_AA)
     # show the frame with the time
     show_frame(frame)
 
