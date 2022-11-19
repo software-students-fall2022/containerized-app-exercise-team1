@@ -134,6 +134,8 @@ def main(seconds_per_round, num_of_rounds):
     cp_victory = 0 
     # number of user victories
     user_victory = 0
+    # number of ties
+    tie_victory = 0
     try:
         # start off with a new round
         new_round = True
@@ -192,6 +194,9 @@ def main(seconds_per_round, num_of_rounds):
                     cp_victory += 1
                 elif result == 'tie':
                     display_content(frame, "Tie", (10, 200), ORANGE)
+                    # decrement the number of rounds left
+                    num_of_rounds -= 1
+                    tie_victory += 1
                 else:
                     display_content(frame, "Try again", (10, 200), ORANGE)
                 # we are ready for a new round
@@ -215,7 +220,7 @@ def main(seconds_per_round, num_of_rounds):
         else:
             display_text = "The computer has won"
             color = RED
-        display_text += " ("+ user_victory + ':' + cp_victory + ')'
+        display_text += " (" + str(user_victory) + ':' + str(cp_victory) + ')'
         display_content(frame, display_text, (10, 250), color)
         display_text = "Press any key to quit"
         display_content(frame, display_text, (10, 300), BLACK)
