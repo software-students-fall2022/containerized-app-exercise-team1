@@ -90,7 +90,7 @@ def handle_play(user_play, cp_play):
         return 'tie'
     elif user_play == '':
         return None
-    elif user_wins.get(user_play, 'rock') == cp_play:
+    elif user_wins[user_play] == cp_play:
         return 'user'
     else:
         return 'cp'
