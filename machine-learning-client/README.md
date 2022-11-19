@@ -4,6 +4,10 @@ The machine learning program was downloaded from this link and then modified: ht
 
 # Set up the virtual environment
 
+* cd to the current directory
+    ```
+    cd machine-learning-client
+    ```
 * Create python virtual environment
     ```
     python -m venv .venv
@@ -19,13 +23,13 @@ The machine learning program was downloaded from this link and then modified: ht
 
 # Run machine-learning-client project locally
 
+* Make sure that you are at the current directory
+    ```
+    cd machine-learning-client
+    ```
 * Make sure that virtual environment is activated
     ```
     source .venv/Scripts/activate
-    ```
-* cd to this directory
-    ```
-    cd machine-learning-client
     ```
 * Run the project
     ```

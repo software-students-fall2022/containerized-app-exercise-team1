@@ -84,7 +84,6 @@ def handle_play(user_play, cp_play):
     Returns 'user' for user victory. Returns 'cp' for computer victory. Returns 'tie' for a tie.
     Anything else means that a tie or invalid input was detected.
     '''
-    # TODO: Compute the results, process the mongo db stuff here, return
 
     user_wins = {'rock': 'scissor', 'paper': 'rock', 'scissor': 'paper'}
     if user_play == cp_play:
@@ -106,6 +105,7 @@ def establish_web_cam_connection():
     cap = cv2.VideoCapture(0)
     print("Cap:", cap)
     for i in range(10):
+        print("Trying to establish connection. Trial", i)
         if not cap.read()[0]:
             time.sleep(2)
             cap = cv2.VideoCapture(0)
@@ -118,6 +118,10 @@ def end_program(cap):
     cap.release()
     cv2.destroyAllWindows()
     print("Completed Exit steps")
+
+def storeToMongo():
+    # TODO
+    pass
 
 def main(seconds_per_round, num_of_rounds):
     print("Game is starting...")
@@ -169,6 +173,8 @@ def main(seconds_per_round, num_of_rounds):
 
                 # process results, save details into the db, etc.
                 result = handle_play(gesture, cp_play)
+
+                storeToMongo()
                 
                 # sleep for the leftover time
                 time.sleep(4 + curTime - time.time())
@@ -176,7 +182,7 @@ def main(seconds_per_round, num_of_rounds):
                 # render the results based on the status
                 if result == 'user':
                     display_content(frame, "You Win!!!", (10, 200), GREEN)
-                     # decrement the number of rounds left
+                    # decrement the number of rounds left
                     num_of_rounds -= 1
                     user_victory += 1
                 elif result == 'cp':
