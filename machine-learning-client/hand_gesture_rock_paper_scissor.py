@@ -48,6 +48,12 @@ class StaticVariables:
     GREEN = (0, 255, 0)
     ORANGE = (0, 165, 255)
 
+    position = [(10, int(text_height*y)) for y, text_height in enumerate([40]*7)]
+    '''
+    Gives out the position coordinates for where to place the frames. Start at index 0
+    '''
+
+
 
 def predict_gesture(frame):
     '''
@@ -233,10 +239,10 @@ def main(seconds_per_round, num_of_rounds):
             gesture, frame = predict_gesture(frame)
 
             # display the gesture of the user.
-            display_content(frame, gesture, (10, 50), StaticVariables.BLACK)
+            display_content(frame, gesture, StaticVariables.position[1], StaticVariables.BLACK)
 
             # display the time left for the user to play
-            display_content(frame, display_text, (100, 100), StaticVariables.RED)
+            display_content(frame, display_text, StaticVariables.position[2], StaticVariables.RED)
 
             # if the time is up
             if display_text <= 0:
@@ -245,12 +251,12 @@ def main(seconds_per_round, num_of_rounds):
 
                 # tell the user what the computer played
                 display_text = "Computer Plays " + cp_play
-                display_content(frame, display_text, (10, 150), (255, 0, 0))
+                display_content(frame, display_text, StaticVariables.position[3], StaticVariables.BLACK)
 
                 # get the current time
                 curTime = time.time()
 
-                # process results
+                # get result of who has won the current round
                 result = handle_play(gesture, cp_play)
 
                 # save details into the db, etc.
@@ -261,22 +267,22 @@ def main(seconds_per_round, num_of_rounds):
 
                 # render the results based on the status
                 if result == 'user':
-                    display_content(frame, "You Win!!!", (10, 200), StaticVariables.GREEN)
+                    display_content(frame, "You Win!!!", StaticVariables.position[4], StaticVariables.GREEN)
                     # decrement the number of rounds left
                     num_of_rounds -= 1
                     user_victory += 1
                 elif result == 'cp':
-                    display_content(frame, "You Lose", (10, 200), StaticVariables.RED)
+                    display_content(frame, "You Lose", StaticVariables.position[4], StaticVariables.RED)
                     # decrement the number of rounds left
                     num_of_rounds -= 1
                     cp_victory += 1
                 elif result == 'tie':
-                    display_content(frame, "Tie", (10, 200), StaticVariables.ORANGE)
+                    display_content(frame, "Tie", StaticVariables.position[4], StaticVariables.ORANGE)
                     # decrement the number of rounds left
                     num_of_rounds -= 1
                     tie_victory += 1
                 else:
-                    display_content(frame, "Try again", (10, 200), StaticVariables.ORANGE)
+                    display_content(frame, "Try again", StaticVariables.position[4], StaticVariables.ORANGE)
                 # we are ready for a new round
                 new_round = True
 
@@ -290,10 +296,10 @@ def main(seconds_per_round, num_of_rounds):
     else:
         # at successful completion, display frame with all results
         display_text, color = final_result_text(user_victory, cp_victory)
-        display_content(frame, display_text, (10, 250), color)
+        display_content(frame, display_text, StaticVariables.position[5], color)
 
         display_text = "Press any key to quit"
-        display_content(frame, display_text, (10, 300), StaticVariables.BLACK)
+        display_content(frame, display_text, StaticVariables.position[6], StaticVariables.BLACK)
         cv2.waitKey(0)
         end_program(cap)
 
