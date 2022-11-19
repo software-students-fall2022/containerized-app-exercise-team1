@@ -48,9 +48,12 @@ class StaticVariables:
     GREEN = (0, 255, 0)
     ORANGE = (0, 165, 255)
 
+    # note: if you are confused about what this does, just open python and test it out.
     position = [(10, int(text_height*y)) for y, text_height in enumerate([40]*7)]
     '''
-    Gives out the position coordinates for where to place the frames. Start at index 0
+    Gives out the position coordinates for where to place the text on the frames.
+
+    Indices from 1 to 6 all work out for the placement of text on the frames.
     '''
 
 
