@@ -8,17 +8,29 @@
     <link rel="stylesheet" href="../static/css/styles.css">
 </head>
 <body>
-    <!-- Header -->
-    <section class="header-container">
-        <header class="header">
-            <div class="header-post-it post-it">
-                <p class="header-title">Rock Paper Scissors</p>
-            </div>
-        </header>
-    </section>
+    <div class="app">
+        <!-- Header -->
+        <section class="header-container">
+            <header class="header">
+                <div class="header-post-it post-it">
+                    <p class="header-title">Rock Paper Scissors</p>
+                </div>
+                <!-- Navigation -->
+                <nav class="navigation-container">
+                    <ul>
+                        {% for game in games %}
+                        <li><a href="#{{game}}">{{game}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </header>
 
-    <!-- Home container -->
-    {% block container %}
-    {% endblock %}
+        </section>
+
+
+        <!-- Home container -->
+        {% block container %}
+        {% endblock %}
+    </div>
 </body>
 </html>
