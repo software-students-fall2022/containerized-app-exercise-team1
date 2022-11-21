@@ -9,7 +9,7 @@ import math
 import mediapipe as mp
 import tensorflow as tf
 import time
-from tensorflow.keras.models import load_model
+# from tensorflow.keras.models import load_model
 
 # initialize mediapipe
 mpHands = mp.solutions.hands
@@ -17,7 +17,7 @@ hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mpDraw = mp.solutions.drawing_utils
 
 # Load the gesture recognizer model
-model = load_model('mp_hand_gesture')
+model = tf.keras.models.load_model('mp_hand_gesture')
 
 # Load class names
 f = open('gesture.names', 'r')
@@ -73,11 +73,15 @@ def predict_gesture(frame):
     Source: https://techvidvan.com/tutorials/hand-gesture-recognition-tensorflow-opencv/
     '''
 
+    # print("starting prediction of gesture")
+    
     x, y, c = frame.shape
 
     # Flip the frame vertically
     frame = cv2.flip(frame, 1)
     framergb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+    # print("processing result for prediction")
 
     # Get hand landmark prediction
     result = hands.process(framergb)
@@ -86,6 +90,8 @@ def predict_gesture(frame):
     
     className = ''
 
+    # print("drawing on frame")
+    
     # post process the result
     if result.multi_hand_landmarks:
         landmarks = []
@@ -96,10 +102,11 @@ def predict_gesture(frame):
                 lmy = int(lm.y * y)
 
                 landmarks.append([lmx, lmy])
-
+            print("Completed one lm")
             # Drawing landmarks on frames
             mpDraw.draw_landmarks(frame, handslms, mpHands.HAND_CONNECTIONS)
 
+            print("Finding prediction for model")
             # Predict gesture
             prediction = model.predict([landmarks])
             # print(prediction)
