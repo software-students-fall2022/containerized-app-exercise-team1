@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+
+/* Global styles ----------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: 'Indie Flower', cursive;
+    font-size: 28px;
+}
+
+body {
+    background-color: var(--color-background);
+    background-image:
+        linear-gradient(90deg, transparent 79px, var(--color-vertical-line) 79px, var(--color-vertical-line) 81px, transparent 81px),
+        linear-gradient(var(--color-horizontal-line) .1em, transparent .1em);
+    background-size: 100% 1rem;
+}
+
+/* Variables --------------------------- */
+:root {
+    --color-background: #ffffff;
+    --color-vertical-line: #af5f5f;
+    --color-horizontal-line: #e1f1fb;
+    --color-postit-purple: #CE60F5;
+    --color-postit-round: #FAFF15;
+    --color-postit-win: #53D085;
+    --color-postit-lose: #E45353;
+    --color-postit-tie: #7995FA;
+}
+
+/* Header ------------------------------ */
+.header {
+    /* border-bottom: 1px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-post-it {
+    width: 25%;
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
+    background-color: var(--color-postit-purple);
+    box-shadow: 0px 6px 8px rgba(33, 33, 33, .7);
+    transform: rotate(-1deg);
+    transition: transform .15s linear;
+}
+
+.header-title {
+    margin: 0.5em 0;
+    text-align: center;
+    font-size: 36px;
+}
+
+/* Rounds ------------------ */
+.round-scroll {
+    display: grid;
+    gap: 5rem;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding: 1rem 0;
+}
+
+.scroll-snap-inline {
+    scroll-snap-type: inline mandatory;
+}
+
+.scroll-snap-inline>* {
+    scroll-snap-align: center;
+}
+
+.round-container {
+    width: 75%;
+    margin: 0 auto;
+    margin-top: 1rem;
+}
+
+.round-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.round-postit {
+    width: 15%;
+    padding: 0.2rem 0;
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
+    background-color: var(--color-postit-round);
+    box-shadow: 0px 6px 8px rgba(33, 33, 33, .7);
+    transform: rotate(1deg);
+    transition: transform .15s linear;
+}
+
+.round-num {
+    text-align: center;
+}
+
+.round-details {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.player-move-text,
+.computer-move-text {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.player-move-img {
+    transform: scaleX(-1) rotate(1deg);
+    box-shadow: 0px 6px 8px rgba(33, 33, 33, .7);
+    transition: transform .15s linear;
+}
+
+.computer-move-img {
+    box-shadow: 0px 6px 8px rgba(33, 33, 33, .7);
+    transform: rotate(1deg);
+    transition: transform .15s linear;
+}
+
+.result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.postit-result-win, 
+.postit-result-lose, 
+.postit-result-tie,
+.postit-result-invalid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 6em;
+    height: 5em;
+    padding: 0.2rem 0;
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
+    transition: transform .15s linear;
+    box-shadow: 0px 6px 8px rgba(33, 33, 33, .7);
+}
+
+.postit-result-win {
+    background-color: var(--color-postit-win);
+    transform: rotate(-2deg);
+}
+
+.postit-result-lose,
+.postit-result-invalid {
+    background-color: var(--color-postit-lose);
+    transform: rotate(2deg);
+}
+
+.postit-result-tie {
+    background-color: var(--color-postit-tie);
+    transform: rotate(-0.5deg);
+}
+
+/* hover and focus styles --------------------*/
+.post-it:hover,
+.post-it:focus {
+    cursor: default;
+    box-shadow: 4px 7px 7px rgba(0, 0, 0, .7);
+    transform: scale(1.1);
+    position: relative;
+    z-index: 5;
+}
+
+.player-postit:hover,
+.player-postit:focus {
+    box-shadow: 4px 7px 7px rgba(0, 0, 0, .7);
+    transform: scaleX(-1) scale(1.1);
+    position: relative;
+    z-index: 5;
+}
+
+.computer-postit:hover,
+.computer-postit:focus {
+    box-shadow: 4px 7px 7px rgba(0, 0, 0, .7);
+    transform: scale(1.1);
+    position: relative;
+    z-index: 5;
+}

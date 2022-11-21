@@ -1,7 +1,6 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect, abort, url_for, make_response, flash
 from pymongo import MongoClient
 import os
-
 
 # connect to the database
 cxn = MongoClient('localhost', 27017)
@@ -17,11 +16,47 @@ except Exception as e:
     print('Database connection error:', e) # debug
 
 
+# Dummy data!
+game = [
+    {
+        "roundNum": 1,
+        "playerMove": "Scissor",
+        "computerMove": "Rock",
+        "result": "Lose",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": 2,
+        "playerMove": "Paper",
+        "computerMove": "Rock",
+        "result": "Win",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": 3,
+        "playerMove": "Scissor",
+        "computerMove": "Scissor",
+        "result": "Tie",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": "Invalid",
+        "playerMove": "Invalid",
+        "computerMove": "Invalid",
+        "result": "Invalid",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+]
+
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'test123'
+    return render_template("home.html", game=game)
 
 
 if __name__ == "__main__":
