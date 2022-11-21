@@ -19,13 +19,11 @@
                 <div class="navigation-container">
                     <nav class="dropdown">
                         <span class="show-games">All Games</span>
-                        <div class="dropdown-menu">
-                            <ul>
-                                {% for game in games %}
-                                <li class="post-it-list"><a href="#{{game}}" >{{game}}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <ul class="dropdown-menu">
+                            {% for game in games %}
+                            <li class="post-it-list"><a href="#{{game}}" >{{game}}</a></li>
+                            {% endfor %}
+                        </ul>
                     </nav>
                 </div>
             </header>
