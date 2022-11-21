@@ -15,4 +15,3 @@ Inside the directory of the project
 ```
 docker-compose up
 ```
-
