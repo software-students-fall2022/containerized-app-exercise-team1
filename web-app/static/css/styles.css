@@ -42,6 +42,7 @@ body {
 }
 
 .header-post-it {
+    position: relative;
     width: 25%;
     margin-top: 0.3rem;
     margin-bottom: 0.5rem;
@@ -55,6 +56,30 @@ body {
     margin: 0.5em 0;
     text-align: center;
     font-size: 36px;
+}
+
+/* Nav ---------------------- */
+.navigation-container {
+    top: 2rem;
+    z-index: 5;
+    padding-left: 0;
+}
+
+.navigation-container ul {
+    display: flex;
+    list-style: none;
+}
+
+.navigation-container li {
+    background-color: #53D085;
+    margin-left: 1rem;
+    padding: 20px;
+}
+
+.navigation-container a {
+    text-decoration: none;
+    font-size: 20px;
+    transition: all 50ms ease-in-out;
 }
 
 /* Rounds ------------------ */
@@ -165,6 +190,11 @@ body {
 }
 
 /* hover and focus styles --------------------*/
+.navigation-container a:hover,
+.navigation-container a:focus {
+    color: #666;
+}
+
 .post-it:hover,
 .post-it:focus {
     cursor: default;
