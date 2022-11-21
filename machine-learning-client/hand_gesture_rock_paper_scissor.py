@@ -117,7 +117,7 @@ def display_content(frame, text: str, location: tuple, color: tuple):
 
     location is a tuple with 2 elements, representing the x and y coordinates.
     
-    color is a tuple with 3 elements, representing Blue, Green, Red
+    color is a tuple with 3 elements, representing Blue, Green, Red in that order.
     '''
 
     # put the text at the location with the specified color formatted as bgr.
