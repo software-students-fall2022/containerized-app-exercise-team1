@@ -28,6 +28,20 @@ f.close()
 print(classNames)
 
 
+cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
+try:
+    # verify the connection works by pinging the database
+    cxn.admin.command('ping') # The ping command is cheap and does not require auth.
+    db = cxn['ml_client'] # store a reference to the database
+    print(' *', 'Connected to MongoDB!') # if we get here, the connection worked!
+
+except Exception as e:
+    # the ping command failed, so the connection is not available.
+    # render_template('error.html', error=e) # render the edit template
+    print('Database connection error:', e) # debug
+
+
+
 class StaticVariables:
     '''
     Variables that should not be modified throughout lifetime of the game.
@@ -227,30 +241,11 @@ def final_result_text(user_victory, cp_victory):
     return (display_text, color)
 
 def storeGame():
-    cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
-    try:
-        # verify the connection works by pinging the database
-        cxn.admin.command('ping') # The ping command is cheap and does not require auth.
-        db = cxn['ml_client'] # store a reference to the database
-        print(' *', 'Connected to MongoDB!') # if we get here, the connection worked!
-
-    except Exception as e:
-        # the ping command failed, so the connection is not available.
-        # render_template('error.html', error=e) # render the edit template
-        print('Database connection error:', e) # debug
     game_id = db.games.insert_one({"rounds": []}).inserted_id
     return game_id
 
 
 def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,frame):
-    cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
-    try:
-        cxn.admin.command('ping')
-        db = cxn['ml_client']
-        print(' *', 'Connected to MongoDB!')
-
-    except Exception as e:
-        print('Database connection error:', e) # debug
     round_id = db.rounds.insert_one({"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture}).inserted_id
     #storing image
     file = "./images/" + str(round_id) + ".jpg"
