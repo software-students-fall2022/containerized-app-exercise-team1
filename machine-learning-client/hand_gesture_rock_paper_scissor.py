@@ -8,7 +8,6 @@ import math
 import mediapipe as mp
 import tensorflow as tf
 import time
-# from tensorflow.keras.models import load_model
 
 # initialize mediapipe
 mpHands = mp.solutions.hands
