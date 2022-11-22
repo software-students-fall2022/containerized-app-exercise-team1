@@ -149,10 +149,10 @@ def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,fra
     except Exception as e:
         print('Database connection error:', e) # debug
     round_id = db.rounds.insert_one({"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture}).inserted_id
+    #storing image
     file = "./images/" + str(round_id) + ".jpg"
     cv2.imwrite(file,frame)
     fs = gridfs.GridFS(db)
-
     with open(file, 'rb') as f:
         contents = f.read()
     fs.put(contents,filename=(str(round_id) + ".jpg"))#image is now in ml_client db fs.files
