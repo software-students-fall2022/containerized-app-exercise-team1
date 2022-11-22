@@ -4,7 +4,6 @@
 
 import cv2
 import numpy as np
-import random
 import math
 import mediapipe as mp
 import tensorflow as tf
@@ -102,7 +101,7 @@ def predict_gesture(frame):
                 lmy = int(lm.y * y)
 
                 landmarks.append([lmx, lmy])
-                
+
             # print("Completed one lm")
 
             # Drawing landmarks on frames
@@ -142,7 +141,7 @@ def computer_plays() -> str:
 
     Returns either a 'rock', 'paper', or 'scissor'.
     '''
-    cp_play = StaticVariables.props[math.floor(random.random()*3)]
+    cp_play = StaticVariables.props[math.floor(np.random.random()*3)]
     return cp_play
 
 def handle_play(user_play, cp_play):
@@ -225,10 +224,6 @@ def final_result_text(user_victory, cp_victory):
     return (display_text, color)
 
 
-def storeToMongo():
-    # TODO: mongo operations on storing details of the round.
-    pass
-
 def main(seconds_per_round, num_of_rounds):
     print("Game is starting...")
     # number of computer victories
@@ -280,12 +275,9 @@ def main(seconds_per_round, num_of_rounds):
 
                 # get result of who has won the current round
                 result = handle_play(gesture, cp_play)
-
-                # save details into the db, etc.
-                storeToMongo()
                 
                 # sleep for the leftover time
-                time.sleep(4 + curTime - time.time())
+                time.sleep(2 + curTime - time.time())
 
                 # render the results based on the status
                 if result == 'user':
@@ -299,12 +291,9 @@ def main(seconds_per_round, num_of_rounds):
                     num_of_rounds -= 1
                     cp_victory += 1
                 elif result == 'tie':
-                    display_content(frame, "Tie", StaticVariables.position[4], StaticVariables.ORANGE)
-                    # decrement the number of rounds left
-                    num_of_rounds -= 1
-                    tie_victory += 1
+                    display_content(frame, "Tie! Try again!", StaticVariables.position[4], StaticVariables.ORANGE)
                 else:
-                    display_content(frame, "Try again", StaticVariables.position[4], StaticVariables.ORANGE)
+                    display_content(frame, "Try again!", StaticVariables.position[4], StaticVariables.ORANGE)
                 # we are ready for a new round
                 new_round = True
 
