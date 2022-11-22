@@ -9,7 +9,7 @@ import math
 import mediapipe as mp
 import tensorflow as tf
 import time
-from tensorflow.keras.models import load_model
+# from tensorflow.keras.models import load_model
 
 # initialize mediapipe
 mpHands = mp.solutions.hands
@@ -17,7 +17,7 @@ hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mpDraw = mp.solutions.drawing_utils
 
 # Load the gesture recognizer model
-model = load_model('mp_hand_gesture')
+model = tf.keras.models.load_model('mp_hand_gesture')
 
 # Load class names
 f = open('gesture.names', 'r')
@@ -25,12 +25,63 @@ classNames = f.read().split('\n')
 f.close()
 print(classNames)
 
+
+class StaticVariables:
+    '''
+    Variables that should not be modified throughout lifetime of the game.
+    '''
+
+    props = ['rock', 'paper', 'scissor']
+    '''
+    The props for the game. Contains list of 3 elements: 'rock', 'paper', 'scissor'.
+    '''
+
+    user_win_conditions = {'rock': 'scissor', 'paper': 'rock', 'scissor': 'paper'}
+    '''
+    The key of the dictionary is what the user plays. 
+    The value is what the computer needs to play for the user to win.
+    '''
+
+    BLACK = (0, 0, 0)
+    RED = (0, 0, 255)
+    BLUE = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    ORANGE = (0, 165, 255)
+
+    # note: if you are confused about what this does, just open python and test it out.
+    position = [(10, int(text_height*y)) for y, text_height in enumerate([40]*7)]
+    '''
+    Gives out the position coordinates for where to place the text on the frames.
+
+    Indices from 1 to 6 all work out for the placement of text on the frames.
+    '''
+
+    font_size_scale = 1
+    '''
+    This is the font size scale for the text.
+    '''
+    font_thickness = 2
+    '''
+    This is the thickness of the text.
+    '''
+
+
+
 def predict_gesture(frame):
+    '''
+    This is the ml prediction of the gesture based on the frame. 
+    Source: https://techvidvan.com/tutorials/hand-gesture-recognition-tensorflow-opencv/
+    '''
+
+    # print("starting prediction of gesture")
+    
     x, y, c = frame.shape
 
     # Flip the frame vertically
     frame = cv2.flip(frame, 1)
     framergb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+    # print("processing result for prediction")
 
     # Get hand landmark prediction
     result = hands.process(framergb)
@@ -39,6 +90,8 @@ def predict_gesture(frame):
     
     className = ''
 
+    # print("drawing on frame")
+    
     # post process the result
     if result.multi_hand_landmarks:
         landmarks = []
@@ -49,10 +102,14 @@ def predict_gesture(frame):
                 lmy = int(lm.y * y)
 
                 landmarks.append([lmx, lmy])
+                
+            # print("Completed one lm")
 
             # Drawing landmarks on frames
             mpDraw.draw_landmarks(frame, handslms, mpHands.HAND_CONNECTIONS)
 
+            # print("Finding prediction for model")
+            
             # Predict gesture
             prediction = model.predict([landmarks])
             # print(prediction)
@@ -60,19 +117,32 @@ def predict_gesture(frame):
             className = classNames[classID]
     return (className, frame)
 
-def display_content(frame, text, location, color):
+def display_content(frame, text: str, location: tuple, color: tuple):
+    '''
+    Render a text onto the frame at the specific location with a specific color and display it to the user.
+
+    frame is the frame to display to the user.
+
+    text is the string to render onto the frame.
+
+    location is a tuple with 2 elements, representing the x and y coordinates.
+    
+    color is a tuple with 3 elements, representing Blue, Green, Red in that order.
+    '''
+
     # put the text at the location with the specified color formatted as bgr.
     cv2.putText(frame, str(text), location, cv2.FONT_HERSHEY_SIMPLEX, 
-            1, color, 2, cv2.LINE_AA)
+            StaticVariables.font_size_scale, color, StaticVariables.font_thickness, cv2.LINE_AA)
     # show the frame with the time
     show_frame(frame)
 
-def computer_plays(frame):
-    # this should be a static variable
-    props = ['rock', 'paper', 'scissor']
-    cp_play = props[math.floor(random.random()*3)]
-    display_text = "Computer Plays " + cp_play
-    display_content(frame, display_text, (10, 150), (255, 0, 0))
+def computer_plays() -> str:
+    '''
+    Determine what the computer plays.
+
+    Returns either a 'rock', 'paper', or 'scissor'.
+    '''
+    cp_play = StaticVariables.props[math.floor(random.random()*3)]
     return cp_play
 
 def handle_play(user_play, cp_play):
@@ -85,22 +155,34 @@ def handle_play(user_play, cp_play):
     Anything else means that a tie or invalid input was detected.
     '''
 
-    user_wins = {'rock': 'scissor', 'paper': 'rock', 'scissor': 'paper'}
+    #If user did not play a valid prop value, then return None
+    if not user_play in StaticVariables.props:
+        return None
+    
+    # if user played the same prop as the computer, we have a tie
     if user_play == cp_play:
         return 'tie'
-    elif user_play == '':
-        return None
-    elif user_wins[user_play] == cp_play:
+    # check condition for user victory
+    elif StaticVariables.user_win_conditions[user_play] == cp_play:
         return 'user'
+    # otherwise, the computer wins.
     else:
         return 'cp'
 
 def show_frame(frame):
+    '''
+    Display the current frame to the user.
+    '''
+
     cv2.imshow("Output", frame)
     if cv2.waitKey(1) == ord('q'):
         raise Exception("Exiting")
 
 def establish_web_cam_connection():
+    '''
+    Attempts to establish web cam connection for a number of times.
+    '''
+
     # Initialize the webcam
     cap = cv2.VideoCapture(0)
     print("Cap:", cap)
@@ -114,22 +196,41 @@ def establish_web_cam_connection():
     raise WebCamConnection("Cannot connect to camera.")
 
 def end_program(cap):
+    '''
+    Performs action before exiting the program. Releases resources that program is using.
+    '''
+
     # release the webcam and destroy all active windows
     cap.release()
     cv2.destroyAllWindows()
     print("Completed Exit steps")
 
+def final_result_text(user_victory, cp_victory):
+    '''
+    Processes the number of victories and returns a tuple of what to display to the user.
+    The first element of the tuple is the string to display to the user.
+    The second element of the tuple is the color that the text to display should be.
+    '''
+
+    if user_victory > cp_victory:
+        display_text = "You have Won!!!"
+        color = StaticVariables.GREEN
+    elif user_victory == cp_victory:
+        display_text = "It is a tie"
+        color = StaticVariables.ORANGE
+    else:
+        display_text = "The computer has won"
+        color = StaticVariables.RED
+    display_text += " " + str(user_victory) + ' : ' + str(cp_victory)
+    return (display_text, color)
+
+
 def storeToMongo():
-    # TODO
+    # TODO: mongo operations on storing details of the round.
     pass
 
 def main(seconds_per_round, num_of_rounds):
     print("Game is starting...")
-    BLACK = (0, 0, 0)
-    RED = (0, 0, 255)
-    BLUE = (255, 0, 0)
-    GREEN = (0, 255, 0)
-    ORANGE = (0, 165, 255)
     # number of computer victories
     cp_victory = 0 
     # number of user victories
@@ -160,22 +261,27 @@ def main(seconds_per_round, num_of_rounds):
             gesture, frame = predict_gesture(frame)
 
             # display the gesture of the user.
-            display_content(frame, gesture, (10, 50), BLACK)
+            display_content(frame, gesture, StaticVariables.position[1], StaticVariables.BLACK)
 
             # display the time left for the user to play
-            display_content(frame, display_text, (100, 100), RED)
+            display_content(frame, display_text, StaticVariables.position[2], StaticVariables.RED)
 
             # if the time is up
             if display_text <= 0:
                 # let the computer make its move
-                cp_play = computer_plays(frame)
+                cp_play = computer_plays()
+
+                # tell the user what the computer played
+                display_text = "Computer Plays " + cp_play
+                display_content(frame, display_text, StaticVariables.position[3], StaticVariables.BLACK)
 
                 # get the current time
                 curTime = time.time()
 
-                # process results, save details into the db, etc.
+                # get result of who has won the current round
                 result = handle_play(gesture, cp_play)
 
+                # save details into the db, etc.
                 storeToMongo()
                 
                 # sleep for the leftover time
@@ -183,22 +289,22 @@ def main(seconds_per_round, num_of_rounds):
 
                 # render the results based on the status
                 if result == 'user':
-                    display_content(frame, "You Win!!!", (10, 200), GREEN)
+                    display_content(frame, "You Win!!!", StaticVariables.position[4], StaticVariables.GREEN)
                     # decrement the number of rounds left
                     num_of_rounds -= 1
                     user_victory += 1
                 elif result == 'cp':
-                    display_content(frame, "You Lose", (10, 200), RED)
+                    display_content(frame, "You Lose", StaticVariables.position[4], StaticVariables.RED)
                     # decrement the number of rounds left
                     num_of_rounds -= 1
                     cp_victory += 1
                 elif result == 'tie':
-                    display_content(frame, "Tie", (10, 200), ORANGE)
+                    display_content(frame, "Tie", StaticVariables.position[4], StaticVariables.ORANGE)
                     # decrement the number of rounds left
                     num_of_rounds -= 1
                     tie_victory += 1
                 else:
-                    display_content(frame, "Try again", (10, 200), ORANGE)
+                    display_content(frame, "Try again", StaticVariables.position[4], StaticVariables.ORANGE)
                 # we are ready for a new round
                 new_round = True
 
@@ -211,19 +317,11 @@ def main(seconds_per_round, num_of_rounds):
         end_program(cap)
     else:
         # at successful completion, display frame with all results
-        if user_victory > cp_victory:
-            display_text = "You have Won!!!"
-            color = GREEN
-        elif user_victory == cp_victory:
-            display_text = "It is a tie"
-            color = ORANGE
-        else:
-            display_text = "The computer has won"
-            color = RED
-        display_text += " (" + str(user_victory) + ':' + str(cp_victory) + ')'
-        display_content(frame, display_text, (10, 250), color)
+        display_text, color = final_result_text(user_victory, cp_victory)
+        display_content(frame, display_text, StaticVariables.position[5], color)
+
         display_text = "Press any key to quit"
-        display_content(frame, display_text, (10, 300), BLACK)
+        display_content(frame, display_text, StaticVariables.position[6], StaticVariables.BLACK)
         cv2.waitKey(0)
         end_program(cap)
 
