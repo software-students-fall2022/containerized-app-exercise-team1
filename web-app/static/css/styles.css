@@ -21,7 +21,7 @@ body {
     background-size: 100% 1rem;
 }
 
-/* Variables --------------------------- */
+/* Global variables --------------------------- */
 :root {
     --color-background: #ffffff;
     --color-vertical-line: #af5f5f;
@@ -35,6 +35,8 @@ body {
 
 /* Header ------------------------------ */
 .header {
+    /* width: 98%; */
+    /* margin: 0 auto; */
     /* border-bottom: 1px solid black; */
     display: flex;
     justify-content: center;
@@ -55,6 +57,81 @@ body {
     margin: 0.5em 0;
     text-align: center;
     font-size: 36px;
+}
+
+/* Nav ---------------------- */
+.navigation-container {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}
+
+.dropdown {
+    position: relative;
+    transition: background-color 0.2s ease-in;
+    padding: 15px 30px;
+    box-shadow: 0px 6px 8px rgba(33, 33, 33, .7);
+    background-color: var(--color-postit-lose);
+    /* border: 1px solid black; */
+}
+
+.dropdown > span {
+    text-decoration: none;
+}
+
+.dropdown .dropdown-menu {
+    position: absolute;
+    right: 0;
+    margin-top:10px;
+    z-index: 5;
+    list-style: none;
+    display: none;
+    opacity: 0;
+}
+
+.dropdown .dropdown-menu li {
+    background-color: var(--color-postit-round);
+    box-shadow: 0px 6px 8px rgba(33, 33, 33, .7);
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+    padding: 20px;
+    animation: animate 400ms forwards ease;
+    /* transition: transform .2s linear; */
+}
+
+.dropdown .dropdown-menu li:nth-child(2n) {
+    transform-origin: top left;
+    transform: skewX(45deg) scaleY(0);
+}
+
+.dropdown .dropdown-menu li:nth-child(2n+1){
+    transform-origin: top right;
+    transform: skewX(-45deg) scaleY(0);
+    animation-delay: 50ms;
+}
+
+.dropdown a {
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.dropdown:hover {
+    cursor: default;
+    background-color:var(--color-postit-win);
+}
+
+.dropdown:hover > .dropdown-menu,
+.dropdown:focus> .dropdown-menu,
+.dropdown .dropdown-menu:hover,
+.dropdown .dropdown-menu:focus {
+    display: block;
+    opacity: 1;
+}
+
+@keyframes animate {
+    100% {
+        transform: skewX(0deg) scaleY(1);
+    }
 }
 
 /* Rounds ------------------ */
@@ -189,3 +266,11 @@ body {
     position: relative;
     z-index: 5;
 }
+
+/* .dropdown-menu a:hover,
+.dropdown-menu a:focus {
+    box-shadow: 0px 6px 8px rgba(23, 23, 23, 0.7);
+    transform: scale(1.2) rotate(-2deg) translate(-1em, -0.1em);
+    position: relative;
+    z-index: 5;
+} */
