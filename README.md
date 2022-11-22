@@ -2,7 +2,6 @@
 
 Build a containerized app that uses machine learning. See [instructions](./instructions.md) for details.
 
-
 # Teammates
 
 * Jonason Wu (jw5911): [Github Profile](https://github.com/JonasonWu)
