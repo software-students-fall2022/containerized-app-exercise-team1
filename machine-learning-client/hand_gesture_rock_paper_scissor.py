@@ -102,11 +102,14 @@ def predict_gesture(frame):
                 lmy = int(lm.y * y)
 
                 landmarks.append([lmx, lmy])
-            print("Completed one lm")
+                
+            # print("Completed one lm")
+
             # Drawing landmarks on frames
             mpDraw.draw_landmarks(frame, handslms, mpHands.HAND_CONNECTIONS)
 
-            print("Finding prediction for model")
+            # print("Finding prediction for model")
+            
             # Predict gesture
             prediction = model.predict([landmarks])
             # print(prediction)
