@@ -53,6 +53,22 @@ class TestGameFunctions:
         cp_play = ['scissor', 'rock', 'paper']
         for u, c in zip(user_play, cp_play):
             assert mlgame.handle_play(u, c) == 'user', f"Expected user to win for user playing {u} and computer playing {c}."
+        user_play = ['', 'random-stuff', 'str']
+        for u, c in zip(user_play, cp_play):
+            assert not mlgame.handle_play in ['tie', 'cp', 'user'], f"Expected invalid user input to result in other values"
+
+    def test_final_result_text(self):
+        user_victories = [0, 1, 2, 3, 4, 5]
+        cp_victories = [5, 4, 3, 2, 1]
+        win_starting = "You have Won!!!"
+        lose_starting = "The computer has won"
+        for u, c in zip(user_victories, cp_victories):
+            if u > c:
+                assert mlgame.final_result_text(u, c)[0].startswith(win_starting), "Expected the text display to express that the user has won."
+            elif u < c:
+                assert mlgame.final_result_text(u, c)[0].startswith(lose_starting), "Expected the text display to express that the computer won"
+            else:
+                assert False, "The game should not tie"
 
 
 class TestFrameFunctions:
