@@ -31,7 +31,7 @@ class TestGameFunctions:
     def test_computer_plays(self):
         props = ['rock', 'paper', 'scissor']
         for i in range(10):
-            assert mlgame.computer_plays() in props, "Expected computer to play one of the props (rock, paper, scissor)."
+            assert mlgame.computer_plays() in props, "Expected computer to play one of the props for any round (rock, paper, scissor)."
 
     def test_establish_web_cam_connection(self):
         try:
@@ -39,8 +39,20 @@ class TestGameFunctions:
             assert cap != None, "Expected web cam to be fetched"
         except mlgame.WebCamConnection as e:
             assert True
-        assert False, "Expected exception to be thrown since web cam cannot be successfully fetched."
-        
+        except Exception as e:
+            assert False, "Expected WebCamConnection to be thrown since web cam cannot be successfully fetched."
+
+    def test_handle_play(self):
+        user_play = ['rock', 'paper', 'scissor']
+        cp_play = ['rock', 'paper', 'scissor']
+        for u, c in zip(user_play, cp_play):
+            assert mlgame.handle_play(u, c) == 'tie', f"Expected tie to happen for user playing {u} and computer playing {c}."
+        cp_play = ['paper', 'scissor', 'rock']
+        for u, c in zip(user_play, cp_play):
+            assert mlgame.handle_play(u, c) == 'cp', f"Expected computer to win for user playing {u} and computer playing {c}."
+        cp_play = ['scissor', 'rock', 'paper']
+        for u, c in zip(user_play, cp_play):
+            assert mlgame.handle_play(u, c) == 'user', f"Expected user to win for user playing {u} and computer playing {c}."
 
 
 class TestFrameFunctions:
