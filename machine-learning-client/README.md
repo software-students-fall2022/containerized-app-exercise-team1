@@ -37,3 +37,11 @@ The machine learning program was downloaded from this link and then modified: ht
     ```
     python -m hand_gesture_rock_paper_scissor
     ```
+
+# How to handle this error
+
+* AttributeError: '_UserObject' object has no attribute 'predict'
+    * Try to re-download the files: https://techvidvan.s3.amazonaws.com/machine-learning-projects/hand-gesture-recognition-code.zip
+    * Delete the current mp_hand_gesture directory in the repository and replace it with a copy of the mp_hand_gesture in the zip file
+    * Delete the data.pickle file and replace it with a copy of the data.pickle in the zip file.
+    
