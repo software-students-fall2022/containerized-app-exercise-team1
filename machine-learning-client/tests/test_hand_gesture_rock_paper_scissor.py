@@ -36,7 +36,7 @@ class TestGameFunctions:
     def test_establish_web_cam_connection(self):
         try:
             cap = mlgame.establish_web_cam_connection()
-            assert cap != None, "Expected web cam to be fetched"
+            assert cap.read()[0] == True, "Expected web cam to be functional"
         except mlgame.WebCamConnection as e:
             assert True
         except Exception as e:
@@ -70,6 +70,33 @@ class TestGameFunctions:
             else:
                 assert False, "The game should not tie"
 
+    def test_correct_props(self):
+        expected = ['rock', 'paper', 'scissor']
+        actual = mlgame.StaticVariables.props
+        assert len(expected) == len(actual), "Expected the number of props to be equal"
+        for e, a in zip(sorted(expected), sorted(actual)):
+            assert e == a, "Expected all props to exist"
+    
+    def test_correct_position(self):
+        expected_separation = 40
+        positions = mlgame.StaticVariables.position
+        for i, p in enumerate(positions):
+            assert i*expected_separation == p[1], f"Expected {expected_separation} pixels of distance between the text positions"
 
-class TestFrameFunctions:
-    pass
+    def test_end_program(self):
+        cap = mlgame.establish_web_cam_connection()
+        if cap.read()[0] == False:
+            assert False, "Web camera is not functional for the test at the moment"
+        else:
+            assert cap.read()[0] == True, "The camera should still be functional at this point"
+            mlgame.end_program(cap)
+            assert cap.read()[0] == False, "The camera should not be functional any more"
+
+    def test_show_frame(self):
+        frame = cv2.imread('./tests/mock_img/rock.jpg')
+        assert type(frame) == np.ndarray, "Expected frame to be successfully fetched"
+        
+        assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) < 1, "The Output frame should not exist yet"
+        mlgame.show_frame(frame)
+        cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) > 0, "The Output frame should exist now"
+        
