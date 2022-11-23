@@ -7,6 +7,7 @@ import numpy as np
 import math
 import mediapipe as mp
 import tensorflow as tf
+import tensorflow_hub as hub
 import time
 import pymongo
 import gridfs
@@ -18,7 +19,11 @@ hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mpDraw = mp.solutions.drawing_utils
 
 # Load the gesture recognizer model
-model = tf.keras.models.load_model('mp_hand_gesture')
+# model = tf.keras.models.load_model('mp_hand_gesture')
+model = tf.keras.Sequential([
+    hub.KerasLayer('mp_hand_gesture')
+])
+model.build((None, 21, 2))
 
 # Load class names
 f = open('gesture.names', 'r')
@@ -91,6 +96,8 @@ def predict_gesture(frame):
     # print("starting prediction of gesture")
     
     x, y, c = frame.shape
+
+    # print(x, y, c)
 
     # Flip the frame vertically
     frame = cv2.flip(frame, 1)
