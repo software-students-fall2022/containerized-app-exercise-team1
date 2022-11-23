@@ -34,7 +34,7 @@ class TestGameFunctions:
             assert mlgame.computer_plays() in props, "Expected computer to play one of the props for any round (rock, paper, scissor)."
 
     def test_establish_web_cam_connection(self):
-        with pytest.raises(mlgame.WebCamConnection) as e:
+        with pytest.raises(mlgame.WebCamConnection):
             cap = mlgame.establish_web_cam_connection()
             assert cap.read()[0] == True, "Expected web cam to be functional"
             raise mlgame.WebCamConnection("Test Passes")
@@ -85,17 +85,17 @@ class TestGameFunctions:
         assert type(frame) == np.ndarray, "Expected frame to be successfully fetched"
         
         mlgame.show_frame(frame)
-        assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) > 0, "The Output frame should exist"
+        assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) > 0.5, "The Output frame should exist"
         mlgame.end_program(MockCamConnection())
-        assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) < 1, "The Output frame should no longer exist"
+        assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) < 0.5, "The Output frame should no longer exist"
 
     def test_show_frame(self):
         frame = cv2.imread('./tests/mock_img/rock.jpg')
         assert type(frame) == np.ndarray, "Expected frame to be successfully fetched"
         
-        assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) < 1, "The Output frame should not exist yet"
+        assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) < 0.5, "The Output frame should not exist yet"
         mlgame.show_frame(frame)
-        cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) > 0, "The Output frame should exist now"
+        cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) > 0.5, "The Output frame should exist now"
 
 class MockCamConnection:
     def __init__(self):
