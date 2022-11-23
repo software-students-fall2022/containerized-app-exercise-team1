@@ -10,7 +10,7 @@ jobs:
     defaults:
       run:
         working-directory: ./web-app
-    timeout-minutes: 4
+    timeout-minutes: 6
     strategy:
       matrix:
         os: [windows-latest]
