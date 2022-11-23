@@ -34,14 +34,11 @@ class TestGameFunctions:
             assert mlgame.computer_plays() in props, "Expected computer to play one of the props for any round (rock, paper, scissor)."
 
     def test_establish_web_cam_connection(self):
-        try:
+        with pytest.raises(mlgame.WebCamConnection) as e:
             cap = mlgame.establish_web_cam_connection()
             assert cap.read()[0] == True, "Expected web cam to be functional"
-        except mlgame.WebCamConnection as e:
-            assert True
-        except Exception as e:
-            assert False, "Expected WebCamConnection to be thrown since web cam cannot be successfully fetched."
-
+            raise mlgame.WebCamConnection("Test Passes")
+        
     def test_handle_play(self):
         user_play = ['rock', 'paper', 'scissor']
         cp_play = ['rock', 'paper', 'scissor']
@@ -99,4 +96,3 @@ class TestGameFunctions:
         assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) < 1, "The Output frame should not exist yet"
         mlgame.show_frame(frame)
         cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) > 0, "The Output frame should exist now"
-        
