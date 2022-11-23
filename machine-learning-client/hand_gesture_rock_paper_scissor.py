@@ -8,6 +8,9 @@ import math
 import mediapipe as mp
 import tensorflow as tf
 import time
+import pymongo
+import gridfs
+from bson.objectid import ObjectId
 
 # initialize mediapipe
 mpHands = mp.solutions.hands
@@ -22,6 +25,20 @@ f = open('gesture.names', 'r')
 classNames = f.read().split('\n')
 f.close()
 print(classNames)
+
+
+cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
+try:
+    # verify the connection works by pinging the database
+    cxn.admin.command('ping') # The ping command is cheap and does not require auth.
+    db = cxn['ml_client'] # store a reference to the database
+    print(' *', 'Connected to MongoDB!') # if we get here, the connection worked!
+
+except Exception as e:
+    # the ping command failed, so the connection is not available.
+    # render_template('error.html', error=e) # render the edit template
+    print('Database connection error:', e) # debug
+
 
 
 class StaticVariables:
@@ -222,7 +239,30 @@ def final_result_text(user_victory, cp_victory):
     display_text += " " + str(user_victory) + ' : ' + str(cp_victory)
     return (display_text, color)
 
+def storeGame():
+    game_id = db.games.insert_one({"rounds": []}).inserted_id
+    return game_id
 
+
+def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,frame):
+    round_id = db.rounds.insert_one({"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture}).inserted_id
+    #storing image
+    file = "./images/" + str(round_id) + ".jpg"
+    cv2.imwrite(file,frame)
+    fs = gridfs.GridFS(db)
+    with open(file, 'rb') as f:
+        contents = f.read()
+    fs.put(contents,filename=(str(round_id) + ".jpg"))#image is now in ml_client db fs.files
+    #can search for these images by 'round id + .jpg'
+    
+    game = db.games.find_one({"_id":ObjectId(game_id)})
+    rounds_arr = game["rounds"]
+    rounds_arr.append(round_id)
+    filter = {"_id":ObjectId(game_id)}
+    new_values = {"$set": {"rounds":rounds_arr}}
+    db.games.update_one(filter,new_values)
+    
+        
 def main(seconds_per_round, num_of_rounds):
     print("Game is starting...")
     # number of computer victories
@@ -231,6 +271,10 @@ def main(seconds_per_round, num_of_rounds):
     user_victory = 0
     # number of ties
     tie_victory = 0
+    #keep track of id for game 
+    game_id = None
+    #keep_track of round #
+    curr_round = 0
     try:
         # start off with a new round
         new_round = True
@@ -295,9 +339,13 @@ def main(seconds_per_round, num_of_rounds):
                     display_content(frame, "Try again!", StaticVariables.position[4], StaticVariables.ORANGE)
                 # we are ready for a new round
                 new_round = True
-
                 # give the user 3 seconds to see the results
                 time.sleep(3)
+                if result == 'cp' or result == "user":
+                    curr_round += 1
+                    if curr_round == 1:
+                        game_id = storeGame()
+                    storeRound(game_id,curr_round,user_victory, gesture, cp_victory,cp_play,frame)
     except WebCamConnection as e:
         print(e)
     except Exception as e:
