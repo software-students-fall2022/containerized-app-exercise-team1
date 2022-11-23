@@ -81,13 +81,13 @@ class TestGameFunctions:
             assert i*expected_separation == p[1], f"Expected {expected_separation} pixels of distance between the text positions"
 
     def test_end_program(self):
-        cap = mlgame.establish_web_cam_connection()
-        if cap.read()[0] == False:
-            assert False, "Web camera is not functional for the test at the moment"
-        else:
-            assert cap.read()[0] == True, "The camera should still be functional at this point"
-            mlgame.end_program(cap)
-            assert cap.read()[0] == False, "The camera should not be functional any more"
+        frame = cv2.imread('./tests/mock_img/rock.jpg')
+        assert type(frame) == np.ndarray, "Expected frame to be successfully fetched"
+        
+        mlgame.show_frame(frame)
+        assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) > 0, "The Output frame should exist"
+        mlgame.end_program(MockCamConnection())
+        assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) < 1, "The Output frame should no longer exist"
 
     def test_show_frame(self):
         frame = cv2.imread('./tests/mock_img/rock.jpg')
@@ -96,3 +96,9 @@ class TestGameFunctions:
         assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) < 1, "The Output frame should not exist yet"
         mlgame.show_frame(frame)
         cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) > 0, "The Output frame should exist now"
+
+class MockCamConnection:
+    def __init__(self):
+        pass
+    def release(self):
+        pass
