@@ -1,5 +1,7 @@
 from app import configure_routes
 from flask import Flask, render_template
+import pytest
+import pytest_flask
 
 game = [
     {
