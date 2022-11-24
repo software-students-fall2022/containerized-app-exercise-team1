@@ -17,7 +17,44 @@ except Exception as e:
 
 
 # Dummy data!
-game = [
+games = {}
+
+game1 = [
+    {
+        "roundNum": 1,
+        "playerMove": "Scissor",
+        "computerMove": "Rock",
+        "result": "Lose",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": 2,
+        "playerMove": "Paper",
+        "computerMove": "Rock",
+        "result": "Win",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": 3,
+        "playerMove": "Scissor",
+        "computerMove": "Scissor",
+        "result": "Tie",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": "Invalid",
+        "playerMove": "Invalid",
+        "computerMove": "Invalid",
+        "result": "Invalid",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+]
+
+game2 = [
     {
         "roundNum": 1,
         "playerMove": "Scissor",
@@ -29,13 +66,16 @@ game = [
 ]
 
 
+games["game1"] = game1
+games["game2"] = game2
+
 
 def configure_routes():
     # set up a web app with correct routes
     app = Flask(__name__)
     @app.route('/')
     def home():
-        return render_template("home.html", game = game)
+        return render_template("home.html", games = games)
     
     return app
 
