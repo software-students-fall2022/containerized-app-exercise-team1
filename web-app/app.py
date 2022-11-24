@@ -62,7 +62,31 @@ game2 = [
         "result": "Lose",
         "timeOfRoundEnd": "...",
         "snapShot": "...",
-    }
+    },
+    {
+        "roundNum": 2,
+        "playerMove": "Paper",
+        "computerMove": "Rock",
+        "result": "Win",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": 3,
+        "playerMove": "Scissor",
+        "computerMove": "Scissor",
+        "result": "Tie",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
+    {
+        "roundNum": "Invalid",
+        "playerMove": "Invalid",
+        "computerMove": "Invalid",
+        "result": "Invalid",
+        "timeOfRoundEnd": "...",
+        "snapShot": "...",
+    },
 ]
 
 
