@@ -89,15 +89,21 @@ game2 = [
     },
 ]
 
+
 games["game1"] = game1
 games["game2"] = game2
 
-app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return render_template("home.html", games=games)
+def configure_routes():
+    # set up a web app with correct routes
+    app = Flask(__name__)
+    @app.route('/')
+    def home():
+        return render_template("home.html", games = games)
+    
+    return app
 
+app = configure_routes()
 
 if __name__ == "__main__":
     app.run(debug=True)
