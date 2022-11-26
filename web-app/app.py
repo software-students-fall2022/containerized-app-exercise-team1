@@ -18,6 +18,7 @@ except Exception as e:
     # render_template('error.html', error=e) # render the edit template
     print('Database connection error:', e) # debug
 
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -29,6 +30,7 @@ def home():
             round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
         games[game["date"]] = round_arr 
     return render_template("home.html", games=games)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
