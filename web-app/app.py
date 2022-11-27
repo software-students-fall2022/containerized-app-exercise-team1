@@ -19,17 +19,26 @@ except Exception as e:
     print('Database connection error:', e) # debug
 
 
-app = Flask(__name__)
 
-@app.route('/')
-def home():
-    games = {}
-    round_arr = []
-    for game in db.games.find({}):
-        for round_id in game["rounds"]:
-            round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
-        games[game["date"]] = round_arr 
-    return render_template("home.html", games=games)
+
+
+def configure_routes():
+    # set up a web app with correct routes
+    app = Flask(__name__)
+
+    @app.route('/')
+    def home():
+        games = {}
+        round_arr = []
+        for game in db.games.find({}):
+            for round_id in game["rounds"]:
+                round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
+            games[game["date"]] = round_arr 
+        return render_template("home.html", games=games)
+    
+    return app
+
+app = configure_routes()
 
 
 if __name__ == "__main__":
