@@ -1,9 +1,8 @@
 {% extends 'base.html' %} 
 
 {% block container %}
-{% for game in games %}
 <div class="round-scroll scroll-snap-inline" id="{{game}}">
-    {% for round in games[game] %}
+    {% for round in game %}
     <section class="round-container">
         <section class="round">
             <header class="round-header">
@@ -60,6 +59,6 @@
     </section>
     {% endfor %}
 </div>
-{% endfor %}
+
 
 {% endblock %}

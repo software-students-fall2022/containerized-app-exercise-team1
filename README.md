@@ -10,6 +10,7 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 
 * Jonason Wu (jw5911): [Github Profile](https://github.com/JonasonWu)
 * Brian Lin (bl2814): [Github Profile](https://github.com/blin007)
+* Alejandro Olazabal (ajo351): [Github Profile](https://github.com/aleolazabal)
 
 
 ## Setting up the docker container for the web app and database
@@ -20,3 +21,17 @@ Inside the directory of the project
 ```
 docker-compose up
 ```
+
+## Running the ML Client
+
+* cd to machine-learning-client
+    ```
+    cd machine-learning-client
+    ```
+* Run the project
+    ```
+    python -m hand_gesture_rock_paper_scissor
+    ```
+  
+
+
