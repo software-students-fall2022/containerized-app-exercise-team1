@@ -2,7 +2,9 @@ from app import configure_routes
 from flask import Flask, render_template
 import pytest
 import pytest_flask
-from pymongo import MongoClient
+import pymongo
+import mongomock
+
 
 # game = [
 #     {
@@ -16,21 +18,27 @@ from pymongo import MongoClient
 # ]
 
 
-# def test_base_route():
+collection = mongomock.MongoClient().db.collection
+def test_base_route():
 
-#     app = configure_routes()
-#     client = app.test_client()
-#     url = '/'
-#     response = client.get(url)
-#     #assert response.get_data() == b'Hello, World!'
-#     assert response.status_code == 200
+    app = configure_routes(db = collection)
+    client = app.test_client()
+    url = '/'
+    response = client.get(url)
+    assert response.status_code == 200
+   # assert response.get_data == render_template("home.html",games = {})
 
-# def test_wrong_route():
+def test_game_route():
+    app = configure_routes(db = collection)
+    client = app.test_client()
+    url = '/game'
+    response = client.get(url)
+    assert response.status_code == 404
 
-#     app = configure_routes()
-#     client = app.test_client()
-#     url = '/test'
-#     response = client.get(url)
-#     assert response.status_code == 404
-def test_sanity():
-    assert True
+def test_wrong_route():
+    
+    app = configure_routes(db = collection)
+    client = app.test_client()
+    url = '/test'
+    response = client.get(url)
+    assert response.status_code == 404
