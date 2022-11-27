@@ -26,6 +26,11 @@ def configure_routes():
     # set up a web app with correct routes
     app = Flask(__name__)
 
+
+
+def configure_routes():
+    # set up a web app with correct routes
+    app = Flask(__name__)
     @app.route('/')
     def home():
         games = {}
@@ -35,7 +40,13 @@ def configure_routes():
                 round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
             games[game["date"]] = round_arr 
         return render_template("home.html", games=games)
-    
+    @app.route('/game/<date>')
+    def game(date):
+        round_arr = []
+        for round_id in db.games.find_one({"date":date})["rounds"]:
+                round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
+        game = round_arr
+        return render_template("game.html", game = game)
     return app
 
 app = configure_routes()
