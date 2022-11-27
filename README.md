@@ -23,3 +23,17 @@ Inside the directory of the project
 ```
 docker-compose up
 ```
+
+## Running the ML Client
+
+* cd to machine-learning-client
+    ```
+    cd machine-learning-client
+    ```
+* Run the project
+    ```
+    python -m hand_gesture_rock_paper_scissor
+    ```
+  
+
+

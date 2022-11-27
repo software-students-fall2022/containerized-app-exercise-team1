@@ -11,6 +11,7 @@ import tensorflow_hub as hub
 import time
 import pymongo
 import gridfs
+from datetime import datetime
 from bson.objectid import ObjectId
 
 # initialize mediapipe
@@ -247,20 +248,23 @@ def final_result_text(user_victory, cp_victory):
     return (display_text, color)
 
 def storeGame():
-    game_id = db.games.insert_one({"rounds": []}).inserted_id
+    fmt = '%b %d %Y, %I:%M%p'
+    game_id = db.games.insert_one({"rounds": [], "date": datetime.now().strftime(fmt)}).inserted_id
     return game_id
 
 
-def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,frame):
-    round_id = db.rounds.insert_one({"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture}).inserted_id
+def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,result):
+    round_id = db.rounds.insert_one({"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture,"result":result}).inserted_id
+    
+    # This is for saving an image to the image folder for viewing.
     #storing image
-    file = "./images/" + str(round_id) + ".jpg"
-    cv2.imwrite(file,frame)
-    fs = gridfs.GridFS(db)
-    with open(file, 'rb') as f:
-        contents = f.read()
-    fs.put(contents,filename=(str(round_id) + ".jpg"))#image is now in ml_client db fs.files
-    #can search for these images by 'round id + .jpg'
+    # file = "./images/" + str(round_id) + ".jpg"
+    # cv2.imwrite(file,frame)
+    # fs = gridfs.GridFS(db)
+    # with open(file, 'rb') as f:
+    #     contents = f.read()
+    # fs.put(contents,filename=(str(round_id) + ".jpg"))#image is now in ml_client db fs.files
+    # #can search for these images by 'round id + .jpg'
     
     game = db.games.find_one({"_id":ObjectId(game_id)})
     rounds_arr = game["rounds"]
@@ -352,7 +356,7 @@ def main(seconds_per_round, num_of_rounds):
                     curr_round += 1
                     if curr_round == 1:
                         game_id = storeGame()
-                    storeRound(game_id,curr_round,user_victory, gesture, cp_victory,cp_play,frame)
+                    storeRound(game_id,curr_round,user_victory, gesture, cp_victory,cp_play,result)
     except WebCamConnection as e:
         print(e)
     except Exception as e:
