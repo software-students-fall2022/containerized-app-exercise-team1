@@ -10,7 +10,10 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 
 * Jonason Wu (jw5911): [Github Profile](https://github.com/JonasonWu)
 * Brian Lin (bl2814): [Github Profile](https://github.com/blin007)
-
+* Robert Chen (yc3363): [Github Profile](https://github.com/RobertChenYF)
+* Alejandro Olazabal (ajo351): [Github Profile](https://github.com/aleolazabal)
+* Mark Chen (xc2097): [Github Profile](https://github.com/markizenlee)
+* Benji Luo (hjl464): [Github Profile](https://github.com/BenjiLuo) 
 
 ## Setting up the docker container for the web app and database
 
