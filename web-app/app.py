@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, redirect, abort, url_for, make_response, flash
 from bson.objectid import ObjectId
-from pymongo import MongoClient
+import pymongo
 import os
 
 # connect to the database
 
 
-cxn = MongoClient("mongodb://127.0.0.1:27017")
+cxn = pymongo.MongoClient("mongodb",27017)
 try:
     # verify the connection works by pinging the database
     cxn.admin.command('ping') # The ping command is cheap and does not require auth.
@@ -17,15 +17,6 @@ except Exception as e:
     # the ping command failed, so the connection is not available.
     # render_template('error.html', error=e) # render the edit template
     print('Database connection error:', e) # debug
-
-
-
-
-
-def configure_routes():
-    # set up a web app with correct routes
-    app = Flask(__name__)
-
 
 
 def configure_routes():
