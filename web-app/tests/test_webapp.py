@@ -26,7 +26,7 @@ def test_base_route():
     url = '/'
     response = client.get(url)
     assert response.status_code == 200
-   # assert response.get_data == render_template("home.html",games = {})
+    assert response.get_data == render_template("home.html",games = {})
 
 def test_game_route():
     app = configure_routes(db = collection)
