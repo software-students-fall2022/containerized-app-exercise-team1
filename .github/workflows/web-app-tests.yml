@@ -30,6 +30,7 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
           pip install pytest-flask
+          pip install pytest-cov
           pip install mongomock
       - name: execute unit tests
-        run: pytest
+        run: pytest --cov
