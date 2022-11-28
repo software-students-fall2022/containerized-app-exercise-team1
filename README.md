@@ -15,7 +15,16 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 * Mark Chen (xc2097): [Github Profile](https://github.com/markizenlee)
 * Benji Luo (hjl464): [Github Profile](https://github.com/BenjiLuo) 
 
-## Setting up the docker container for the web app and database
+# Product Vision Statement
+
+* ML client
+    * Allow users to use the camera to play a game of rock paper scissors with the computer.
+* Web App
+    * Displays the results and the moves of each rock paper scissor game played on the ML client as well as some analytics.
+* DB
+    * Stores the rounds of each game of rock paper scissor played on the ML client.
+
+# Setting up the docker container for the web app and database
 
 Download Docker Desktop.[link](https://www.docker.com/)
 
