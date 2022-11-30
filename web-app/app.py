@@ -5,12 +5,12 @@ import os
 
 # connect to the database
 
-
+database = None
 cxn = pymongo.MongoClient("mongodb",27017)
 try:
     # verify the connection works by pinging the database
     cxn.admin.command('ping') # The ping command is cheap and does not require auth.
-    db = cxn['ml_client'] # store a reference to the database
+    database = cxn['ml_client'] # store a reference to the database
     print(' *', 'Connected to MongoDB!') # if we get here, the connection worked!
 
 except Exception as e:
@@ -19,7 +19,7 @@ except Exception as e:
     print('Database connection error:', e) # debug
 
 
-def configure_routes():
+def configure_routes(db):
     # set up a web app with correct routes
     app = Flask(__name__)
     @app.route('/')
@@ -40,7 +40,7 @@ def configure_routes():
         return render_template("game.html", game = game)
     return app
 
-app = configure_routes()
+app = configure_routes(db = database)
 
 
 if __name__ == "__main__":
