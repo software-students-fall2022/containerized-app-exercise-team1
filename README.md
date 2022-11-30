@@ -32,6 +32,13 @@ docker-compose up
     ```
     python -m hand_gesture_rock_paper_scissor
     ```
-  
 
+# Shortcut Links
+
+* How to run the programs locally:
+    * machine-learning-client: Look at [README.md](./machine-learning-client) file.
+    * web-app: Look at [README.md](./web-app) file.
+* To get coverage information:
+    * Look at [README.md](./machine-learning-client/tests) file for steps to get machine-learning-client coverage.
+    * Look at [README.md](./web-app/tests) file for steps to get web-app coverage.
 
