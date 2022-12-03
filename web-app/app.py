@@ -18,22 +18,6 @@ except Exception as e:
     # render_template('error.html', error=e) # render the edit template
     print('Database connection error:', e) # debug
 
-def find_games(db):
-    games = {}
-    round_arr = []
-    for game in db.games.find({}):
-        for round_id in game["rounds"]:
-            round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
-        games[game["date"]] = round_arr
-    return games
-
-def find_game_date(db, date):
-    round_arr = []
-    for round_id in db.games.find_one({"date":date})["rounds"]:
-        round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
-    game = round_arr
-    return game
-
 def configure_routes(db):
     # set up a web app with correct routes
     app = Flask(__name__)
@@ -46,6 +30,22 @@ def configure_routes(db):
         game = find_game_date(db, date)
         return render_template("game.html", game = game)
     return app
+
+def find_games(db):
+    games = {}
+    round_arr = []
+    for game in db.games.find({}):
+        for round_id in game["rounds"]:
+            round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
+        games[game["date"]] = round_arr
+    return games
+
+def find_gamce_date(db, date):
+    round_arr = []
+    for round_id in db.games.find_one({"date":date})["rounds"]:
+        round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
+    game = round_arr
+    return game
 
 app = configure_routes(db = database)
 
