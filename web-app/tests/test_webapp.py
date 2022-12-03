@@ -73,6 +73,8 @@ def test_find_games():
     games[date_now] = [this_round]
 
     assert games == find_games(collection)
+    collection.games.drop()
+    collection.rounds.drop()
 
 def test_find_game_date():
     fmt = '%b %d %Y, %I:%M%p'
@@ -85,10 +87,10 @@ def test_find_game_date():
         "cp_score": 0,
         "cp_gesture": "paper",
         "result": "user"}).inserted_id
-    game = collection.games.find_one({"_id": ObjectId(game_id)})
+    game = collection.games.find_one({"_id": game_id})
     rounds_arr = game["rounds"]
     rounds_arr.append(round_id)
-    filter = {"_id": ObjectId(game_id)}
+    filter = {"_id": game_id}
     new_values = {"$set": {"rounds": rounds_arr}}
     collection.games.update_one(filter, new_values)
 
@@ -101,6 +103,7 @@ def test_find_game_date():
         "result": "user"}
     game = [this_round]
 
-    assert game[0]["_id"] == find_game_date(collection, date_now)[0]["_id"]
+    assert game == find_game_date(collection, date_now)
 
-    # assert game == find_game_date(collection, date_now)
+    collection.games.drop()
+    collection.rounds.drop()
