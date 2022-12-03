@@ -100,5 +100,7 @@ def test_find_game_date():
         "cp_gesture": "paper",
         "result": "user"}
     game = [this_round]
-    
-    assert game == find_game_date(collection, date_now)
+
+    assert game[0]["_id"] == find_game_date(collection, date_now)[0]["_id"]
+
+    # assert game == find_game_date(collection, date_now)
