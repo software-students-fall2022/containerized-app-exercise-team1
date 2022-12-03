@@ -4,7 +4,8 @@ import pytest
 import pytest_flask
 import pymongo
 import mongomock
-
+from datetime import datetime
+from bson.objectid import ObjectId
 
 # game = [
 #     {
@@ -45,7 +46,32 @@ def test_wrong_route():
     assert response.status_code == 404
 
 def test_find_games():
-    pass
+    fmt = '%b %d %Y, %I:%M%p'
+    date_now = datetime.now().strftime(fmt)
+    games = {}
+    game_id = collection.games.insert_one({"rounds": [], "date": date_now}).inserted_id
+    round_id = collection.rounds.insert_one({"round": 0,
+        "user_score": 1,
+        "user_gesture": "scissor",
+        "cp_score": 0,
+        "cp_gesture": "paper",
+        "result": "user"}).inserted_id
+    game = collection.games.find_one({"_id": ObjectId(game_id)})
+    rounds_arr = game["rounds"]
+    rounds_arr.append(round_id)
+    filter = {"_id": ObjectId(game_id)}
+    new_values = {"$set": {"rounds": rounds_arr}}
+    collection.games.update_one(filter, new_values)
+
+    this_round = {"_id": round_id,
+        "round": 0,
+        "user_score": 1,
+        "user_gesture": "scissor",
+        "cp_score": 0,
+        "cp_gesture": "paper",
+        "result": "user"}
+    games[date_now] = this_round
+    assert games == 0
 
 def test_find_game_date():
     pass

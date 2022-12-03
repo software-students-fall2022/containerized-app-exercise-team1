@@ -40,7 +40,7 @@ def find_games(db):
         games[game["date"]] = round_arr
     return games
 
-def find_gamce_date(db, date):
+def find_game_date(db, date):
     round_arr = []
     for round_id in db.games.find_one({"date":date})["rounds"]:
         round_arr.append(db.rounds.find_one({"_id":ObjectId(round_id)}))
