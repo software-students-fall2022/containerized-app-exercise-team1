@@ -29,6 +29,7 @@ def test_base_route():
    # assert response.get_data == render_template("home.html",games = {})
 
 def test_game_route():
+
     app = configure_routes(db = collection)
     client = app.test_client()
     url = '/game'
@@ -42,3 +43,4 @@ def test_wrong_route():
     url = '/test'
     response = client.get(url)
     assert response.status_code == 404
+
