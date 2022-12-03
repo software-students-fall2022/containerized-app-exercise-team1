@@ -1,4 +1,6 @@
 from app import configure_routes
+from app import find_games
+from app import find_game_date
 from flask import Flask, render_template
 import pytest
 import pytest_flask
@@ -70,8 +72,8 @@ def test_find_games():
         "cp_score": 0,
         "cp_gesture": "paper",
         "result": "user"}
-    games[date_now] = this_round
-    assert games == 0
+    games[date_now] = [this_round]
+    assert games == find_games(collection)
 
 def test_find_game_date():
     pass
