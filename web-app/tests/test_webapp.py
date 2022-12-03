@@ -44,3 +44,8 @@ def test_wrong_route():
     response = client.get(url)
     assert response.status_code == 404
 
+def test_find_games():
+    pass
+
+def test_find_game_date():
+    pass
