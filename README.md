@@ -30,7 +30,7 @@ Please start the web app and database before running the ML client.<br>
 
 The ML client use packages not supported on **Apple silicon machine**, so our app does not work on Apple silicon Mac.
 
-## Running the web app and database
+## Run the web app and database
 
 Download Docker Desktop.[link](https://www.docker.com/)
 
@@ -39,7 +39,7 @@ Inside the directory of the project
 docker-compose up
 ```
 
-## Running the ML Client
+## Run the ML Client
 
 Look at [README.md](./machine-learning-client) file.
 
