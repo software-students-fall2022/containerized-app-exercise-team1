@@ -43,12 +43,13 @@ docker-compose up
 
 Look at [README.md](./machine-learning-client) file.
 
+# Test the app locally
+* Look at [README.md](./machine-learning-client/tests) file for steps to test the machine-learning-client.
+* Look at [README.md](./web-app/tests) file for steps to test the web-app.
 
-# Shortcut Links
-
+# Other Links
 * How to run the web-app without docker:
     * Look at [README.md](./web-app) file.
-* To get coverage information:
-    * Look at [README.md](./machine-learning-client/tests) file for steps to get machine-learning-client coverage.
-    * Look at [README.md](./web-app/tests) file for steps to get web-app coverage.
+
+
 
