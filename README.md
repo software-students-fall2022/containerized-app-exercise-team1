@@ -24,6 +24,9 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 * DB
     * Stores the rounds of each game of rock paper scissor played on the ML client.
 
+# Figma Wireframe
+![RPS Wireframe](./assets/Wireframe.png)
+
 # Run the app
 
 Please start the web app and database before running the ML client.<br>
