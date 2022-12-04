@@ -33,8 +33,8 @@ def configure_routes(db):
 
 def find_games(db):
     games = {}
-    round_arr = []
     for game in db.games.find({}):
+        round_arr = []
         for round_id in game["rounds"]:
             round_arr.append(db.rounds.find_one({"_id": ObjectId(round_id)}))
         games[game["date"]] = round_arr
