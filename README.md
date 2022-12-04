@@ -24,7 +24,16 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 * DB
     * Stores the rounds of each game of rock paper scissor played on the ML client.
 
-# Setting up the docker container for the web app and database
+# Figma Wireframe
+![RPS Wireframe](./assets/Wireframe.png)
+
+# Run the app
+
+Please start the web app and database before running the ML client.<br>
+
+The ML client use packages not supported on **Apple silicon machine**, so our app does not work on Apple silicon Mac.
+
+## Run the web app and database
 
 Download Docker Desktop.[link](https://www.docker.com/)
 
@@ -33,23 +42,17 @@ Inside the directory of the project
 docker-compose up
 ```
 
-## Running the ML Client
+## Run the ML Client
 
-* cd to machine-learning-client
-    ```
-    cd machine-learning-client
-    ```
-* Run the project
-    ```
-    python -m hand_gesture_rock_paper_scissor
-    ```
+Look at [README.md](./machine-learning-client) file.
 
-# Shortcut Links
+# Test the app locally
+* Look at [README.md](./machine-learning-client/tests) file for steps to test the machine-learning-client.
+* Look at [README.md](./web-app/tests) file for steps to test the web-app.
 
-* How to run the programs locally:
-    * machine-learning-client: Look at [README.md](./machine-learning-client) file.
-    * web-app: Look at [README.md](./web-app) file.
-* To get coverage information:
-    * Look at [README.md](./machine-learning-client/tests) file for steps to get machine-learning-client coverage.
-    * Look at [README.md](./web-app/tests) file for steps to get web-app coverage.
+# Other Links
+* How to run the web-app without docker:
+    * Look at [README.md](./web-app) file.
+
+
 
