@@ -24,10 +24,6 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 * DB
     * Stores the rounds of each game of rock paper scissor played on the ML client.
 
-Each rock paper scissor game between the user and the computer contains five non-tie valid rounds. <br>
-
-Once 5 non-tie valid rounds are played, the ML client will shut down. If you want to play another game, just run the ML client again. <br>
-
 # Figma Wireframe
 ![RPS Wireframe](./assets/Wireframe.png)
 
@@ -57,6 +53,16 @@ In order to play the rock-paper-scissor game and see records of your game on the
 ## Run the ML Client
 
 Look at [README.md](./machine-learning-client) file.
+
+## Game Play Explained
+
+Each rock paper scissor game between the user and the computer contains five non-tie valid rounds. <br>
+
+Each time the user runs the machine learning client, the camera will be turned on, and one single game consisting of 5 non-tie valid rounds will be played. <br>
+
+In each round, the user will make gestures in front of the camera. When the countdown time is up, the gesture the user is showing will be captured, while what the computer plays will be shown on screen. <br>
+
+Once 5 non-tie valid rounds are played, the ML client will shut down. If you want to play another game, just run the ML client again. <br>
 
 # Test the app locally
 * Look at [README.md](./machine-learning-client/tests) file for steps to test the machine-learning-client.
