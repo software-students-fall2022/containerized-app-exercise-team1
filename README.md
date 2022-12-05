@@ -42,6 +42,14 @@ Inside the directory of the project
 docker-compose up
 ```
 
+At this point the database and the web app should be running. <br>
+
+To access the home page of the web app, type in this link in your browser. http://localhost:3000/ <br>
+
+The web app is now displayed without any game data. <br>
+
+In order to play the rock-paper-scissor game and see records of your game on the web app, please run the ML client as follows. <br>
+
 ## Run the ML Client
 
 Look at [README.md](./machine-learning-client) file.
@@ -53,6 +61,8 @@ Look at [README.md](./machine-learning-client) file.
 # Other Links
 * How to run the web-app without docker:
     * Look at [README.md](./web-app) file.
+* Figma wireframes and designs
+    * [Figma](https://www.figma.com/file/G3z7dBJrnSTq7WPm62RrOA/RPS?node-id=0%3A1&t=6tux87ZeU1GXvetP-0)
 
 
 
