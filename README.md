@@ -53,6 +53,8 @@ Look at [README.md](./machine-learning-client) file.
 # Other Links
 * How to run the web-app without docker:
     * Look at [README.md](./web-app) file.
+* Figma wireframes and designs
+    * [Figma](https://www.figma.com/file/G3z7dBJrnSTq7WPm62RrOA/RPS?node-id=0%3A1&t=6tux87ZeU1GXvetP-0)
 
 
 
