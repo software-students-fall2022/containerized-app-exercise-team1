@@ -20,7 +20,7 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 * ML client
     * Allow users to use the camera to play a game of rock paper scissors with the computer.
 * Web App
-    * Displays the results and the moves of each rock paper scissor game played on the ML client as well as some analytics.
+    * Displays the results and the moves of each rock paper scissor game played on the ML client.
 * DB
     * Stores the rounds of each game of rock paper scissor played on the ML client.
 
