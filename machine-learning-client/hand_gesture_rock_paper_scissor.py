@@ -485,8 +485,8 @@ def main(seconds_per_round, num_of_rounds):
                 tot_round += 1
                 storeAllRounds(game_id,tot_round,user_victory, gesture, cp_victory,cp_play,result)
                 
-                # Benji's edit : print all rounds in the allRounds collection.
-                printDb(db["allRounds"])
+                # # Benji's edit : print all rounds in the allRounds collection.
+                # printDb(db["allRounds"])
 
     except WebCamConnection as e:
         print(e)
@@ -507,4 +507,4 @@ class WebCamConnection(Exception):
     pass
 
 if __name__ == '__main__':
-    main(5, 10)
+    main(5, 6)
