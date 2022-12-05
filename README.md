@@ -17,6 +17,8 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 
 # Product Vision Statement
 
+We contructed an app that holds rock-paper-scissor games between a single player and the computer.
+
 * ML client
     * Allow users to use the camera to play a game of rock paper scissors with the computer.
 * Web App
