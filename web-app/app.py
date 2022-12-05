@@ -47,6 +47,24 @@ def find_game_date(db, date):
     game = round_arr
     return game
 
+def num_total_games(db):
+    games = find_games(db)
+    return len(games)
+
+def num_player_wins(db):
+    games = find_games(db)
+    num_player_wins = 0
+
+    for date, game in games.items():
+        num_player_win_rounds = 0
+        for round in game:
+            if round["result"] == "user":
+                num_player_win_rounds += 1
+        if num_player_win_rounds >= 3:
+            num_player_wins += 1
+
+    return num_player_wins
+
 app = configure_routes(db = database)
 
 if __name__ == "__main__":
