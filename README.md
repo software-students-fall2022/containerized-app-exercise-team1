@@ -64,7 +64,9 @@ Each time the user runs the machine learning client, the camera will be turned o
 
 In each round, the user will make gestures in front of the camera. When the countdown time is up, the gesture the user is showing will be captured, while what the computer plays will be shown on screen. <br>
 
-Once 5 non-tie valid rounds are played, the ML client will shut down. If you want to play another game, just run the ML client again. <br>
+Once 5 non-tie valid rounds are played, the ML client will show the result of the game. Click a random key to exit. <by>
+
+If you want to play another game, just run the ML client again. <br>
 
 # Test the app locally
 * Look at [README.md](./machine-learning-client/tests) file for steps to test the machine-learning-client.
