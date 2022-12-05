@@ -10,14 +10,22 @@ The machine learning program was downloaded from this link and then modified: ht
     ```
     cd machine-learning-client
     ```
+
 * Create python virtual environment
     ```
     python -m venv .venv
     ```
+
 * Activate virtual environment on bash
+    * On Windows
     ```
     source .venv/Scripts/activate
     ```
+    * On Mac
+    ```
+    source .venv/bin/activate
+    ```
+
 * Download dependencies
     ```
     pip install -r requirements.txt
@@ -29,10 +37,17 @@ The machine learning program was downloaded from this link and then modified: ht
     ```
     cd machine-learning-client
     ```
+
 * Make sure that virtual environment is activated
+    * On Windows
     ```
     source .venv/Scripts/activate
     ```
+    * On Mac
+    ```
+    source .venv/bin/activate
+    ```
+
 * Run the project
     ```
     python -m hand_gesture_rock_paper_scissor
