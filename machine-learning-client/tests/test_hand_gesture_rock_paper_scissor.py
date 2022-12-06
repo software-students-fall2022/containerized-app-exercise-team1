@@ -4,7 +4,8 @@ import cv2
 import numpy as np
 
 # Benji's edits
-import pymongo
+# import pymongo
+import mongomock
 
 class TestGameFunctions:
 
@@ -109,17 +110,20 @@ class TestGameFunctions:
     ])
 
     def test_storeRound(self, round, user_score, user_gesture, cp_score, cp_gesture, result) :
-        # Establish the connection to the database
-        cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
-        db = cxn['ml_client']
+        # # Establish the connection to the database
+        # cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
+        # db = cxn['ml_client']
+
+        db = mongomock.MongoClient().db.collection
+        
+        # Run storeRound() and check if the collection's actual rounds are the expected rounds.
+        game_id = mlgame.storeGame()
+        mlgame.storeRound(game_id, round, user_score, user_gesture, cp_score, cp_gesture, result)
 
         # Access the rounds collection and initialize the round that should be stored in the rounds collection.
         roundsCollection = db["rounds"]
         # expectedRound = {"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture,"result":result}
         
-        # Run storeRound() and check if the collection's actual rounds are the expected rounds.
-        game_id = mlgame.storeGame()
-        mlgame.storeRound(game_id, round, user_score, user_gesture, cp_score, cp_gesture, result)
         numRounds = roundsCollection.count_documents({})
         rndTracker = 1
         for rnd in roundsCollection.find():
@@ -139,16 +143,19 @@ class TestGameFunctions:
     ])
 
     def test_storeAllRounds(self, round, user_score, user_gesture, cp_score, cp_gesture, result) :
-            # Establish the connection to the database
-            cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
-            db = cxn['ml_client']
+            # # Establish the connection to the database
+            # cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
+            # db = cxn['ml_client']
 
-            # Access the allRounds collection and initialize the round that should be stored in the collection.
-            allRoundsCollection = db["allRrounds"]
+            db = mongomock.MongoClient().db.collection
             
             # Run storeAllRounds() and check if the collection's actual rounds are the expected rounds.
             game_id = mlgame.storeGame()
             mlgame.storeAllRounds(game_id, round, user_score, user_gesture, cp_score, cp_gesture, result)
+
+            # Access the allRounds collection and initialize the round that should be stored in the collection.
+            allRoundsCollection = db["allRrounds"]
+            
             numRounds = allRoundsCollection.count_documents({})
             rndTracker = 1
             for rnd in allRoundsCollection.find():
