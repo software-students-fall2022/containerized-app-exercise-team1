@@ -245,13 +245,13 @@ def final_result_text(user_victory, cp_victory):
     display_text += " " + str(user_victory) + ' : ' + str(cp_victory)
     return (display_text, color)
 
-def storeGame():
+def storeGame(db):
     fmt = '%b %d %Y, %I:%M%p'
     game_id = db.games.insert_one({"rounds": [], "date": datetime.now().strftime(fmt)}).inserted_id
     return game_id
 
 
-def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,result):
+def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,result,db):
     round_id = db.rounds.insert_one({"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture,"result":result}).inserted_id
 
     # This is for saving an image to the image folder for viewing.
@@ -274,7 +274,7 @@ def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,res
 # ----------------------------------------------------------------------------------
 # Benji's edit: additional function that stores the round in the allRounds collection for history-matching algo.
 # Game collection is not updated with the tied round.
-def storeAllRounds(game_id,round, user_score, user_gesture, cp_score, cp_gesture,result) :
+def storeAllRounds(game_id,round, user_score, user_gesture, cp_score, cp_gesture,result,db) :
     round_id = db.allRounds.insert_one({"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture,"result":result}).inserted_id
 
 # Benji's edit: History-matching algo using the database.
@@ -479,14 +479,15 @@ def main(seconds_per_round, num_of_rounds):
                 if result == 'cp' or result == "user":
                     curr_round += 1
                     if curr_round == 1:
-                        game_id = storeGame()
-                    storeRound(game_id,curr_round,user_victory, gesture, cp_victory,cp_play,result)
+                        game_id = storeGame(db)
+                    storeRound(game_id,curr_round,user_victory, gesture, cp_victory,cp_play,result, db)
                 
                 tot_round += 1
-                storeAllRounds(game_id,tot_round,user_victory, gesture, cp_victory,cp_play,result)
+                storeAllRounds(game_id,tot_round,user_victory, gesture, cp_victory,cp_play,result, db)
                 
                 # # Benji's edit : print all rounds in the allRounds collection.
                 # printDb(db["allRounds"])
+
 
     except WebCamConnection as e:
         print(e)
