@@ -1,0 +1,65 @@
+{% extends 'base.html' %} 
+
+{% block container %}
+{% for game in games %}
+<div class="round-scroll scroll-snap-inline" id="{{game}}">
+    {% for round in games[game] %}
+    <section class="round-container">
+        <section class="round">
+            <header class="round-header">
+                <div class="round-postit post-it">
+                    <p class="round-num">Round {{round.round}}</p>
+                </div>
+            </header>
+            <div class="round-details">
+                <div class="player-move">
+                    <p class="player-move-text">Player Move</p>
+                    {% if round.user_gesture == 'scissor' %}
+                    <img alt="Scissor" src="../static/images/Scissor.jpg" class="player-move-img player-postit">
+                    {% elif round.user_gesture == 'rock' %}
+                    <img alt="Rock" src="../static/images/Rock.jpg" class="player-move-img player-postit">
+                    {% elif round.user_gesture == 'paper' %}
+                    <img alt="Paper" src="../static/images/Paper.jpg" class="player-move-img player-postit">
+                    {% else %}
+                    <img alt="Invalid" src="../static/images/InvalidMove.gif" class="player-move-img player-postit">
+                    {% endif %}
+                </div>
+                <div class="vs">
+                    <p class="vs-text">VS</p>
+                </div>
+                <div class="computer-move">
+                    <p class="computer-move-text">Computer Move</p>
+                    {% if round.cp_gesture == 'scissor' %}
+                    <img alt="Scissor" src="../static/images/Scissor.jpg" class="computer-move-img computer-postit">
+                    {% elif round.cp_gesture == 'rock' %}
+                    <img alt="Rock" src="../static/images/Rock.jpg" class="computer-move-img computer-postit">
+                    {% elif round.cp_gesture== 'paper' %}
+                    <img alt="Paper" src="../static/images/Paper.jpg" class="computer-move-img computer-postit">
+                    {% else %}
+                    <img alt="Invalid" src="../static/images/InvalidMove.gif" class="computer-move-img computer-postit">
+                    <p>{{round}}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="result">
+                {% if round.result == "user" %}
+                <div class="postit-result-win post-it">
+                    <p class="result-text">Win</p>
+                </div>
+                {% elif round.result == "cp" %}
+                <div class="postit-result-lose post-it">
+                    <p class="result-text">Lose</p>
+                </div>
+                {% else %}
+                <div class="postit-result-tie post-it">
+                    <p class="result-text">Tie</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </section>
+    {% endfor %}
+</div>
+{% endfor %}
+
+{% endblock %}
