@@ -86,8 +86,6 @@ class StaticVariables:
     This is the thickness of the text.
     '''
 
-
-
 def predict_gesture(frame):
     '''
     This is the ml prediction of the gesture based on the frame. 
@@ -247,15 +245,15 @@ def final_result_text(user_victory, cp_victory):
     display_text += " " + str(user_victory) + ' : ' + str(cp_victory)
     return (display_text, color)
 
-def storeGame():
+def storeGame(db):
     fmt = '%b %d %Y, %I:%M%p'
     game_id = db.games.insert_one({"rounds": [], "date": datetime.now().strftime(fmt)}).inserted_id
     return game_id
 
 
-def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,result):
+def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,result,db):
     round_id = db.rounds.insert_one({"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture,"result":result}).inserted_id
-    
+
     # This is for saving an image to the image folder for viewing.
     #storing image
     # file = "./images/" + str(round_id) + ".jpg"
@@ -272,7 +270,117 @@ def storeRound(game_id,round, user_score, user_gesture, cp_score, cp_gesture,res
     filter = {"_id":ObjectId(game_id)}
     new_values = {"$set": {"rounds":rounds_arr}}
     db.games.update_one(filter,new_values)
-    
+
+# ----------------------------------------------------------------------------------
+# Benji's edit: additional function that stores the round in the allRounds collection for history-matching algo.
+# Game collection is not updated with the tied round.
+def storeAllRounds(game_id,round, user_score, user_gesture, cp_score, cp_gesture,result,db) :
+    round_id = db.allRounds.insert_one({"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture,"result":result}).inserted_id
+
+# Benji's edit: History-matching algo using the database.
+def ML_historyMatching (db, numRounds, showDetails = True) :
+    # If database is empty, return None.
+    if db == None:
+        return None
+
+    #Fetching the values (player and comp moves) in the rounds collection of the database and adding them to resultsArr[].
+    resultsArr = []
+    allRounds = db["allRounds"]
+    for round in allRounds.find():
+        resultsArr.append({"player" : round["user_gesture"], "computer" : round["cp_gesture"]})
+
+    # #Getting the most recent game in the games collection of the database.
+    # lastGame = None
+    # games = db["games"]
+    # for game in games.find():
+    #     lastGame = game
+
+    # #Setting numRounds (rounds checked for the move sequence) to the number of rounds in the last game - 1.
+    # numRounds = len(lastGame["rounds"]) - 1
+
+    #While loop checks for move sequence repeat in the game; if none are found, remove one move and check new sequence.
+    while numRounds != 1 :
+        fractResultsArr = []
+
+        #Iterates through the last n rounds and stores their key-value pairs into fractResultsArr[]. 
+        for index in range(len(resultsArr) - numRounds, len(resultsArr), 1) :
+            fractResultsArr.append(resultsArr[index])
+
+        #Using the auxiliary function find_subarray(), a segment of key-value pairs in the larger resultsArr[] 
+        #containing the key-value pairs of the smaller fractResultsArr[] will be found. An index will be returned
+        #that will serve as the starting index for the segment of key-value pairs in resultsArr[] that match the 
+        #ones in fractResultsArr[].
+        startIndex = find_subarray(resultsArr, fractResultsArr)
+        
+        # only print if in text-detail mode
+        if(showDetails):
+            print("this is the fract results arr: ", fractResultsArr) #
+            print("this is the start index: ", startIndex) #
+
+        #If there are no segments of key-value pairs in the larger resultsArr[] which match the ones in
+        #the smaller fractResultsArr[], the number of past rounds checked will be decremented. This loop continues
+        #until past rounds equals 1. 
+        if startIndex == None :
+            numRounds -= 1
+            continue
+
+        #Returns the expected move the player will play after the matched segment. Checks if the expected move is in
+        #the bounds of the resultsArr (numRounds can't encompass the entire array AND the matching segment cannot be last n 
+        #rounds).  
+        elif not (startIndex + numRounds >= len(resultsArr)):
+            return resultsArr[startIndex + numRounds]
+
+        numRounds -= 1
+    return None
+
+#Checks if the first array contains the second array.
+def find_subarray(first_arr, second_arr):
+    first = 0
+    second = 0
+
+    first_len = len(first_arr)
+    second_len = len(second_arr)
+
+    while first < first_len and second < second_len:
+        #From the beginning of each array, every element is matched to check
+        #for an equality. In this case, we only want to match the player's past moves
+        #to find a pattern so only the key-value pair for the player is checked (hence [0]).
+        if (first_arr[first])['player'] == (second_arr[second])['player']:
+            first += 1
+            second += 1
+
+            #If the second array is completed (has every element equal
+            #to an element in the first array in the same order), 
+            #second array is contained within the first array.
+            if second == second_len:
+                return first - second_len
+
+        else:
+            #If the second array's element doesn't match the first array's 
+            #element, it has to be reset. Likewise, if the second array is
+            #reset, the first array has to be checked again from the next 
+            #element after the first element which matched the second array's 
+            #first element.
+            first = first - second + 1
+            second = 0
+
+    return None
+
+#Counters the move passed as an arg. 
+def counterMove(move) :
+    if move == 'rock':
+        return 'paper'
+    elif move == 'paper':
+        return 'scissor'
+    elif move == 'scissor':
+        return 'rock'
+    else:
+        return None
+
+#Prints the values stored in the database
+def printDb(collection) :
+    for doc in collection.find():
+        print(doc)
         
 def main(seconds_per_round, num_of_rounds):
     print("Game is starting...")
@@ -286,6 +394,9 @@ def main(seconds_per_round, num_of_rounds):
     game_id = None
     #keep_track of round #
     curr_round = 0
+    # Benji's edit: keeps track of all rounds (including ties)
+    tot_round = 0
+
     try:
         # start off with a new round
         new_round = True
@@ -317,8 +428,19 @@ def main(seconds_per_round, num_of_rounds):
 
             # if the time is up
             if display_text <= 0:
-                # let the computer make its move
-                cp_play = computer_plays()
+
+                # Benji's edit : Computer uses move determined by history-matching algo.
+                cp_play = None
+                if tot_round >= 3:
+                    predictedMove = ML_historyMatching(db, tot_round - 1)
+                    if predictedMove != None:
+                        playerMove = predictedMove['player']
+                        print("Expected player move: ", playerMove)
+                        cp_play = counterMove(playerMove)
+                        print("Counter move: ", cp_play)
+                if cp_play == None:
+                    # let the computer make its move
+                    cp_play = computer_plays()
 
                 # tell the user what the computer played
                 display_text = "Computer Plays " + cp_play
@@ -352,11 +474,21 @@ def main(seconds_per_round, num_of_rounds):
                 new_round = True
                 # give the user 3 seconds to see the results
                 time.sleep(3)
+
+                #Benji's edit : call storeAllRounds() even for ties to ensure all player moves are tracked.
                 if result == 'cp' or result == "user":
                     curr_round += 1
                     if curr_round == 1:
-                        game_id = storeGame()
-                    storeRound(game_id,curr_round,user_victory, gesture, cp_victory,cp_play,result)
+                        game_id = storeGame(db)
+                    storeRound(game_id,curr_round,user_victory, gesture, cp_victory,cp_play,result, db)
+                
+                tot_round += 1
+                storeAllRounds(game_id,tot_round,user_victory, gesture, cp_victory,cp_play,result, db)
+                
+                # # Benji's edit : print all rounds in the allRounds collection.
+                # printDb(db["allRounds"])
+
+
     except WebCamConnection as e:
         print(e)
     except Exception as e:
@@ -376,4 +508,4 @@ class WebCamConnection(Exception):
     pass
 
 if __name__ == '__main__':
-    main(5, 5)
+    main(5, 6)

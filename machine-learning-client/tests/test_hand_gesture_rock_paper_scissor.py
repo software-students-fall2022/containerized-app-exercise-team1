@@ -3,6 +3,10 @@ import hand_gesture_rock_paper_scissor as mlgame
 import cv2
 import numpy as np
 
+# Benji's edits
+# import pymongo
+import mongomock
+
 class TestGameFunctions:
 
     def test_sanity(self):
@@ -96,6 +100,84 @@ class TestGameFunctions:
         assert cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) < 0.5, "The Output frame should not exist yet"
         mlgame.show_frame(frame)
         cv2.getWindowProperty("Output", cv2.WND_PROP_VISIBLE) > 0.5, "The Output frame should exist now"
+
+# -----------------------------------------------------------------------------------------
+# Benji's edits
+    @pytest.mark.parametrize("round, user_score, user_gesture, cp_score, cp_gesture, result", [
+        (1, 0, 'rock', 0, 'paper', 'cp'),
+        (2, 0, 'paper', 1, 'paper', 'tie'),
+        (3, 0, 'scissor', 1, 'paper', 'user'),
+    ])
+
+    def test_storeRound(self, round, user_score, user_gesture, cp_score, cp_gesture, result) :
+        # # Establish the connection to the database
+        # cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
+        # db = cxn['ml_client']
+
+        db = mongomock.MongoClient().db.collection
+        
+        # Run storeRound() and check if the collection's actual rounds are the expected rounds.
+        game_id = mlgame.storeGame(db)
+        mlgame.storeRound(game_id, round, user_score, user_gesture, cp_score, cp_gesture, result, db)
+
+        # Access the rounds collection and initialize the round that should be stored in the rounds collection.
+        roundsCollection = db["rounds"]
+        # expectedRound = {"round":round,"user_score":user_score,"user_gesture":user_gesture,"cp_score":cp_score,"cp_gesture":cp_gesture,"result":result}
+        
+        numRounds = roundsCollection.count_documents({})
+        rndTracker = 1
+        for rnd in roundsCollection.find():
+            if rndTracker == numRounds:
+                assert rnd["round"] is round
+                assert rnd["user_score"] is user_score
+                assert rnd["user_gesture"] == user_gesture
+                assert rnd["cp_score"] is cp_score
+                assert rnd["cp_gesture"] == cp_gesture
+                assert rnd["result"] == result
+            rndTracker += 1
+
+    @pytest.mark.parametrize("round, user_score, user_gesture, cp_score, cp_gesture, result", [
+        (1, 0, 'rock', 0, 'paper', 'cp'),
+        (2, 0, 'paper', 1, 'paper', 'tie'),
+        (3, 0, 'scissor', 1, 'paper', 'user'),
+    ])
+
+    def test_storeAllRounds(self, round, user_score, user_gesture, cp_score, cp_gesture, result) :
+            # # Establish the connection to the database
+            # cxn = pymongo.MongoClient("mongodb://127.0.0.1:27017")
+            # db = cxn['ml_client']
+
+            db = mongomock.MongoClient().db.collection
+            
+            # Run storeAllRounds() and check if the collection's actual rounds are the expected rounds.
+            game_id = mlgame.storeGame(db)
+            mlgame.storeAllRounds(game_id, round, user_score, user_gesture, cp_score, cp_gesture, result, db)
+
+            # Access the allRounds collection and initialize the round that should be stored in the collection.
+            allRoundsCollection = db["allRrounds"]
+
+            numRounds = allRoundsCollection.count_documents({})
+            rndTracker = 1
+            for rnd in allRoundsCollection.find():
+                if rndTracker == numRounds:
+                    assert rnd["round"] is round
+                    assert rnd["user_score"] is user_score
+                    assert rnd["user_gesture"] == user_gesture
+                    assert rnd["cp_score"] is cp_score
+                    assert rnd["cp_gesture"] == cp_gesture
+                    assert rnd["result"] == result
+                rndTracker += 1
+
+    @pytest.mark.parametrize("move, counterMove", [
+        ('rock', 'paper'),
+        ('scissor', 'rock'),
+        ('paper', 'scissor'),
+        (None, None)
+    ])
+    
+    def test_counterMove(self, move, counterMove) :
+        assert mlgame.counterMove(move) == counterMove
+        
 
 class MockCamConnection:
     def __init__(self):
