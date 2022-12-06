@@ -46,6 +46,13 @@ def test_wrong_route():
     response = client.get(url)
     assert response.status_code == 404
 
+def test_analytics_route():
+    app = configure_routes(db = collection)
+    client = app.test_client()
+    url = '/analytics'
+    response = client.get(url)
+    assert response.status_code == 200
+
 def test_find_games():
     fmt = '%b %d %Y, %I:%M%p'
     date_now = datetime.now().strftime(fmt)

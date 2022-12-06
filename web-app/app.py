@@ -29,7 +29,13 @@ def configure_routes(db):
     def game(date):
         game = find_game_date(db, date)
         return render_template("game.html", game = game)
+    @app.route('/analytics')
+    def analytics():
+        ntg = num_total_games(db)
+        npw = num_player_wins(db)
+        return render_template("analytics.html", ntg = ntg, npw = npw)
     return app
+
 
 def find_games(db):
     games = {}
